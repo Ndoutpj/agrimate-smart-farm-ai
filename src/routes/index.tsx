@@ -1,12 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FarmCalculator } from "@/components/FarmCalculator";
 import { Logo } from "@/components/Logo";
+import { Tilt3D } from "@/components/Tilt3D";
 import { Button } from "@/components/ui/button";
 import {
   Sprout, ScanLine, CloudSun, BookOpen, Users, BellRing,
   ShieldCheck, ArrowRight, Sparkles, Check,
 } from "lucide-react";
+import heroImg from "@/assets/hero-farm.jpg";
+import featureAi from "@/assets/feature-ai.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
