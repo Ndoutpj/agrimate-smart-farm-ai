@@ -72,14 +72,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "New Agrimate" },
+      { name: "description", content: "AgriMate is a smart farm AI app that helps farmers plan, manage, and optimize operations." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "New Agrimate" },
+      { property: "og:description", content: "AgriMate is a smart farm AI app that helps farmers plan, manage, and optimize operations." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "New Agrimate" },
+      { name: "twitter:description", content: "AgriMate is a smart farm AI app that helps farmers plan, manage, and optimize operations." },
     ],
     links: [
       {
