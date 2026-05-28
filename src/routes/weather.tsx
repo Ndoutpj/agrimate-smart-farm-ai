@@ -173,10 +173,23 @@ function WeatherPage() {
     );
   };
 
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
+  const [now, setNow] = useState(new Date());
+
   useEffect(() => { requestLocation(); }, []);
+  useEffect(() => {
+    const tick = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(tick);
+  }, []);
+  useEffect(() => {
+    if (!coords) return;
+    const id = setInterval(() => load(coords.lat, coords.lon, usingDefault), REFRESH_MS);
+    return () => clearInterval(id);
+  }, [coords, usingDefault]);
 
   const cur = data?.current;
   const wmo = cur ? WMO[cur.code] ?? { label: "—", emoji: "🌡️" } : null;
+  const alerts = data ? severeAlerts(data) : [];
 
   return (
     <div className="min-h-screen bg-background">
