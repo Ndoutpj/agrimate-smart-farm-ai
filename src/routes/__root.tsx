@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { AuthProvider } from "@/lib/auth";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -35,7 +37,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -72,23 +73,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "New Agrimate" },
-      { name: "description", content: "AgriMate is a smart farm AI app that helps farmers plan, manage, and optimize operations." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "New Agrimate" },
-      { property: "og:description", content: "AgriMate is a smart farm AI app that helps farmers plan, manage, and optimize operations." },
+      { title: "AgriMate — Smart Farming Assistant" },
+      { name: "description", content: "AgriMate helps farmers plan, manage, and optimize operations with AI, weather intelligence, and smart tools." },
+      { property: "og:title", content: "AgriMate" },
+      { property: "og:description", content: "Smart farming assistant — AI, weather, tasks, and planning." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "New Agrimate" },
-      { name: "twitter:description", content: "AgriMate is a smart farm AI app that helps farmers plan, manage, and optimize operations." },
     ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -112,10 +104,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <AuthProvider>
+        <Outlet />
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
