@@ -154,6 +154,7 @@ function WeatherPage() {
     setLoading(true);
     setError(null);
     setUsingDefault(isDefault);
+    setCoords({ lat, lon });
     fetchWeather(lat, lon)
       .then(setData)
       .catch((e) => setError(e.message || "Failed to load weather"))
@@ -208,6 +209,10 @@ function WeatherPage() {
               </p>
               <h1 className="text-3xl font-bold md:text-4xl">Weather Intelligence</h1>
               <p className="mt-1 text-muted-foreground">Live conditions and 7-day forecast for your farm.</p>
+              <p className="mt-1 text-muted-foreground flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                {now.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })} · {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </p>
             </div>
             <Button variant="outline" size="sm" onClick={requestLocation} disabled={loading}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <MapPin className="mr-2 h-4 w-4" />}
@@ -218,6 +223,20 @@ function WeatherPage() {
       </div>
 
       <div className="mx-auto max-w-6xl space-y-6 px-4 py-8">
+        {alerts.length > 0 && (
+          <Card className="border-destructive/40 bg-destructive/5 p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+              <div>
+                <p className="font-semibold text-destructive">Severe weather alert</p>
+                <ul className="mt-1 space-y-0.5 text-sm">
+                  {alerts.map((a) => <li key={a}>{a}</li>)}
+                </ul>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {error && (
           <Card className="border-destructive/40 bg-destructive/5 p-4 text-sm">
             {error}. <button className="underline" onClick={requestLocation}>Retry</button>
