@@ -3,11 +3,27 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { CloudSun, MapPin, Droplets, Wind, Thermometer, Sun, CloudRain, Loader2 } from "lucide-react";
+import { MapPin, Droplets, Wind, Thermometer, Sun, CloudRain, Loader2, AlertTriangle, Clock } from "lucide-react";
 import {
   Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid,
   Bar, BarChart,
 } from "recharts";
+
+const REFRESH_MS = 30 * 60 * 1000; // 30 minutes
+
+function severeAlerts(d: WeatherData): string[] {
+  const out: string[] = [];
+  const severeCodes = new Set([95, 96, 99, 75, 82]);
+  for (const day of d.daily.slice(0, 3)) {
+    const w = WMO[day.code];
+    if (severeCodes.has(day.code)) out.push(`${w?.emoji ?? "⚠️"} ${w?.label ?? "Severe weather"} expected on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })}.`);
+    if (day.precip > 50) out.push(`🌊 Flood risk on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })} (${day.precip}mm rain).`);
+    if (day.tmax > 38) out.push(`🔥 Extreme heat on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })} (${Math.round(day.tmax)}°C).`);
+    if (day.tmin < 2) out.push(`❄️ Frost risk on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })} (${Math.round(day.tmin)}°C).`);
+  }
+  if (d.current.wind > 50) out.push(`💨 Strong winds right now (${Math.round(d.current.wind)} km/h).`);
+  return Array.from(new Set(out));
+}
 
 export const Route = createFileRoute("/weather")({
   head: () => ({
