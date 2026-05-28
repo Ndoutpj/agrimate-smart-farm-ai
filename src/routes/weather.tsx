@@ -3,11 +3,27 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { CloudSun, MapPin, Droplets, Wind, Thermometer, Sun, CloudRain, Loader2 } from "lucide-react";
+import { MapPin, Droplets, Wind, Thermometer, Sun, CloudRain, Loader2, AlertTriangle, Clock } from "lucide-react";
 import {
   Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid,
   Bar, BarChart,
 } from "recharts";
+
+const REFRESH_MS = 30 * 60 * 1000; // 30 minutes
+
+function severeAlerts(d: WeatherData): string[] {
+  const out: string[] = [];
+  const severeCodes = new Set([95, 96, 99, 75, 82]);
+  for (const day of d.daily.slice(0, 3)) {
+    const w = WMO[day.code];
+    if (severeCodes.has(day.code)) out.push(`${w?.emoji ?? "⚠️"} ${w?.label ?? "Severe weather"} expected on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })}.`);
+    if (day.precip > 50) out.push(`🌊 Flood risk on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })} (${day.precip}mm rain).`);
+    if (day.tmax > 38) out.push(`🔥 Extreme heat on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })} (${Math.round(day.tmax)}°C).`);
+    if (day.tmin < 2) out.push(`❄️ Frost risk on ${new Date(day.date).toLocaleDateString(undefined, { weekday: "long" })} (${Math.round(day.tmin)}°C).`);
+  }
+  if (d.current.wind > 50) out.push(`💨 Strong winds right now (${Math.round(d.current.wind)} km/h).`);
+  return Array.from(new Set(out));
+}
 
 export const Route = createFileRoute("/weather")({
   head: () => ({
@@ -138,6 +154,7 @@ function WeatherPage() {
     setLoading(true);
     setError(null);
     setUsingDefault(isDefault);
+    setCoords({ lat, lon });
     fetchWeather(lat, lon)
       .then(setData)
       .catch((e) => setError(e.message || "Failed to load weather"))
@@ -157,10 +174,23 @@ function WeatherPage() {
     );
   };
 
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
+  const [now, setNow] = useState(new Date());
+
   useEffect(() => { requestLocation(); }, []);
+  useEffect(() => {
+    const tick = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(tick);
+  }, []);
+  useEffect(() => {
+    if (!coords) return;
+    const id = setInterval(() => load(coords.lat, coords.lon, usingDefault), REFRESH_MS);
+    return () => clearInterval(id);
+  }, [coords, usingDefault]);
 
   const cur = data?.current;
   const wmo = cur ? WMO[cur.code] ?? { label: "—", emoji: "🌡️" } : null;
+  const alerts = data ? severeAlerts(data) : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -179,6 +209,10 @@ function WeatherPage() {
               </p>
               <h1 className="text-3xl font-bold md:text-4xl">Weather Intelligence</h1>
               <p className="mt-1 text-muted-foreground">Live conditions and 7-day forecast for your farm.</p>
+              <p className="mt-1 text-muted-foreground flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                {now.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })} · {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </p>
             </div>
             <Button variant="outline" size="sm" onClick={requestLocation} disabled={loading}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <MapPin className="mr-2 h-4 w-4" />}
@@ -189,6 +223,20 @@ function WeatherPage() {
       </div>
 
       <div className="mx-auto max-w-6xl space-y-6 px-4 py-8">
+        {alerts.length > 0 && (
+          <Card className="border-destructive/40 bg-destructive/5 p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+              <div>
+                <p className="font-semibold text-destructive">Severe weather alert</p>
+                <ul className="mt-1 space-y-0.5 text-sm">
+                  {alerts.map((a) => <li key={a}>{a}</li>)}
+                </ul>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {error && (
           <Card className="border-destructive/40 bg-destructive/5 p-4 text-sm">
             {error}. <button className="underline" onClick={requestLocation}>Retry</button>

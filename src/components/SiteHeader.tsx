@@ -1,8 +1,13 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Menu, LogOut, User, ListChecks, LayoutDashboard } from "lucide-react";
+import { useAuth, initials } from "@/lib/auth";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard" },
@@ -14,6 +19,14 @@ const NAV = [
 ] as const;
 
 export function SiteHeader() {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: "/" });
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/75 backdrop-blur supports-[backdrop-filter]:bg-background/55">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
@@ -31,12 +44,41 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Link to="/login" className="hidden sm:inline-flex">
-            <Button variant="ghost" size="sm">Sign in</Button>
-          </Link>
-          <Link to="/register" className="hidden sm:inline-flex">
-            <Button size="sm" className="bg-primary hover:bg-primary/90">Get started</Button>
-          </Link>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-glow text-sm font-semibold text-primary-foreground shadow-sm transition hover:scale-105">
+                  {initials(user.user_metadata?.full_name as string | undefined, user.email)}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
+                  <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
+                  <User className="mr-2 h-4 w-4" /> My Farm
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/tasks" })}>
+                  <ListChecks className="mr-2 h-4 w-4" /> Tasks
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link to="/login" className="hidden sm:inline-flex">
+                <Button variant="ghost" size="sm">Sign in</Button>
+              </Link>
+              <Link to="/register" className="hidden sm:inline-flex">
+                <Button size="sm" className="bg-primary hover:bg-primary/90">Get started</Button>
+              </Link>
+            </>
+          )}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
@@ -48,10 +90,18 @@ export function SiteHeader() {
                 {NAV.map((n) => (
                   <Link key={n.to} to={n.to} className="rounded-lg px-3 py-2 text-sm hover:bg-muted">{n.label}</Link>
                 ))}
-                <div className="mt-4 grid gap-2">
-                  <Link to="/login"><Button variant="outline" className="w-full">Sign in</Button></Link>
-                  <Link to="/register"><Button className="w-full">Get started</Button></Link>
-                </div>
+                {user ? (
+                  <>
+                    <Link to="/profile" className="rounded-lg px-3 py-2 text-sm hover:bg-muted">My Farm</Link>
+                    <Link to="/tasks" className="rounded-lg px-3 py-2 text-sm hover:bg-muted">Tasks</Link>
+                    <Button variant="outline" className="mt-3 w-full" onClick={handleSignOut}>Sign out</Button>
+                  </>
+                ) : (
+                  <div className="mt-4 grid gap-2">
+                    <Link to="/login"><Button variant="outline" className="w-full">Sign in</Button></Link>
+                    <Link to="/register"><Button className="w-full">Get started</Button></Link>
+                  </div>
+                )}
               </div>
             </SheetContent>
           </Sheet>

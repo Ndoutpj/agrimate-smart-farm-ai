@@ -17,7 +17,10 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CropDoctorRouteImport } from './routes/crop-doctor'
 import { Route as CalculatorRouteImport } from './routes/calculator'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 
 const WeatherRoute = WeatherRouteImport.update({
   id: '/weather',
@@ -59,10 +62,24 @@ const CalculatorRoute = CalculatorRouteImport.update({
   path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -75,6 +92,8 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/tips': typeof TipsRoute
   '/weather': typeof WeatherRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/tasks': typeof AuthenticatedTasksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,10 +105,13 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/tips': typeof TipsRoute
   '/weather': typeof WeatherRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/tasks': typeof AuthenticatedTasksRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/calculator': typeof CalculatorRoute
   '/crop-doctor': typeof CropDoctorRoute
   '/dashboard': typeof DashboardRoute
@@ -98,6 +120,8 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/tips': typeof TipsRoute
   '/weather': typeof WeatherRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/tasks': typeof AuthenticatedTasksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +135,8 @@ export interface FileRouteTypes {
     | '/register'
     | '/tips'
     | '/weather'
+    | '/profile'
+    | '/tasks'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,9 +148,12 @@ export interface FileRouteTypes {
     | '/register'
     | '/tips'
     | '/weather'
+    | '/profile'
+    | '/tasks'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/calculator'
     | '/crop-doctor'
     | '/dashboard'
@@ -133,10 +162,13 @@ export interface FileRouteTypes {
     | '/register'
     | '/tips'
     | '/weather'
+    | '/_authenticated/profile'
+    | '/_authenticated/tasks'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   CalculatorRoute: typeof CalculatorRoute
   CropDoctorRoute: typeof CropDoctorRoute
   DashboardRoute: typeof DashboardRoute
@@ -205,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -212,11 +251,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthenticatedTasksRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedTasksRoute: AuthenticatedTasksRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   CalculatorRoute: CalculatorRoute,
   CropDoctorRoute: CropDoctorRoute,
   DashboardRoute: DashboardRoute,

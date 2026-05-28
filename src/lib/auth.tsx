@@ -1,0 +1,57 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { Session, User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+
+type AuthCtx = {
+  user: User | null;
+  session: Session | null;
+  loading: boolean;
+  signOut: () => Promise<void>;
+};
+
+const Ctx = createContext<AuthCtx>({
+  user: null,
+  session: null,
+  loading: true,
+  signOut: async () => {},
+});
+
+export const useAuth = () => useContext(Ctx);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s);
+      setLoading(false);
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setLoading(false);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  return (
+    <Ctx.Provider
+      value={{
+        session,
+        user: session?.user ?? null,
+        loading,
+        signOut: async () => {
+          await supabase.auth.signOut();
+        },
+      }}
+    >
+      {children}
+    </Ctx.Provider>
+  );
+}
+
+export function initials(name?: string | null, email?: string | null) {
+  const src = (name?.trim() || email?.split("@")[0] || "U").trim();
+  const parts = src.split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || src[0]!.toUpperCase();
+}
