@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
@@ -6,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Save, MapPin, Wheat, Beef } from "lucide-react";
+import { Loader2, Save, MapPin, Wheat, Beef, Crown, Sparkles, CalendarClock, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, initials } from "@/lib/auth";
+import { usePremium } from "@/lib/premium";
+import { cancelPayfastSubscription } from "@/lib/payfast.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/profile")({
