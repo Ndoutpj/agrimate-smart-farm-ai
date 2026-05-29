@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      diagnosis_usage: {
+        Row: {
+          count: number
+          id: string
+          updated_at: string
+          used_on: string
+          user_id: string
+        }
+        Insert: {
+          count?: number
+          id?: string
+          updated_at?: string
+          used_on?: string
+          user_id: string
+        }
+        Update: {
+          count?: number
+          id?: string
+          updated_at?: string
+          used_on?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payment_events: {
+        Row: {
+          amount_gross: number | null
+          billing_date: string | null
+          created_at: string
+          id: string
+          m_payment_id: string | null
+          payment_status: string | null
+          pf_payment_id: string | null
+          raw: Json
+          token: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount_gross?: number | null
+          billing_date?: string | null
+          created_at?: string
+          id?: string
+          m_payment_id?: string | null
+          payment_status?: string | null
+          pf_payment_id?: string | null
+          raw: Json
+          token?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount_gross?: number | null
+          billing_date?: string | null
+          created_at?: string
+          id?: string
+          m_payment_id?: string | null
+          payment_status?: string | null
+          pf_payment_id?: string | null
+          raw?: Json
+          token?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -23,8 +86,15 @@ export type Database = {
           farm_size_ha: number | null
           full_name: string | null
           id: string
+          is_premium: boolean
           livestock: string[] | null
           location: string | null
+          next_billing_date: string | null
+          payfast_token: string | null
+          plan: string
+          subscription_cancelled_at: string | null
+          subscription_started_at: string | null
+          subscription_status: string | null
           updated_at: string
         }
         Insert: {
@@ -35,8 +105,15 @@ export type Database = {
           farm_size_ha?: number | null
           full_name?: string | null
           id: string
+          is_premium?: boolean
           livestock?: string[] | null
           location?: string | null
+          next_billing_date?: string | null
+          payfast_token?: string | null
+          plan?: string
+          subscription_cancelled_at?: string | null
+          subscription_started_at?: string | null
+          subscription_status?: string | null
           updated_at?: string
         }
         Update: {
@@ -47,8 +124,15 @@ export type Database = {
           farm_size_ha?: number | null
           full_name?: string | null
           id?: string
+          is_premium?: boolean
           livestock?: string[] | null
           location?: string | null
+          next_billing_date?: string | null
+          payfast_token?: string | null
+          plan?: string
+          subscription_cancelled_at?: string | null
+          subscription_started_at?: string | null
+          subscription_status?: string | null
           updated_at?: string
         }
         Relationships: []
