@@ -74,6 +74,10 @@ function ProfilePage() {
           </div>
         </div>
 
+        <SubscriptionCard />
+
+
+
         {loading ? (
           <div className="flex items-center text-muted-foreground"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading…</div>
         ) : (
@@ -119,5 +123,74 @@ function Field({ label, hint, children }: { label: React.ReactNode; hint?: strin
       {children}
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
+  );
+}
+
+function SubscriptionCard() {
+  const { isPremium, plan, nextBillingDate, subscriptionStatus, refresh } = usePremium();
+  const cancel = useServerFn(cancelPayfastSubscription);
+  const [cancelling, setCancelling] = useState(false);
+
+  const doCancel = async () => {
+    if (!confirm("Cancel your AgriMate Premium subscription? You'll lose access to premium features immediately.")) return;
+    setCancelling(true);
+    try {
+      await cancel({});
+      await refresh();
+      toast.success("Subscription cancelled");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Couldn't cancel");
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  return (
+    <Card className="tilt-card overflow-hidden p-6">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            {isPremium ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 px-2.5 py-1 text-xs font-semibold text-white">
+                <Crown className="h-3 w-3" /> Premium
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                Free plan
+              </span>
+            )}
+            {subscriptionStatus && (
+              <span className="text-xs text-muted-foreground capitalize">· {subscriptionStatus}</span>
+            )}
+          </div>
+          <h2 className="mt-2 text-lg font-semibold">
+            {isPremium ? "AgriMate Premium" : "AgriMate Free"}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {isPremium ? "R49 / month · billed by PayFast" : "Upgrade to unlock everything for R49/month."}
+          </p>
+          {isPremium && nextBillingDate && (
+            <p className="mt-2 flex items-center gap-1.5 text-sm">
+              <CalendarClock className="h-4 w-4 text-primary" />
+              Next billing: <span className="font-medium">{new Date(nextBillingDate).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}</span>
+            </p>
+          )}
+        </div>
+        <div className="flex gap-2">
+          {isPremium ? (
+            <Button variant="outline" size="sm" onClick={doCancel} disabled={cancelling}>
+              {cancelling ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <X className="mr-2 h-4 w-4" />}
+              Cancel plan
+            </Button>
+          ) : (
+            <Link to="/upgrade">
+              <Button size="sm" className="bg-gradient-to-r from-primary to-primary-glow">
+                <Sparkles className="mr-2 h-4 w-4" /> Upgrade
+              </Button>
+            </Link>
+          )}
+        </div>
+      </div>
+    </Card>
   );
 }
