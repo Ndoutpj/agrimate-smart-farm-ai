@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WeatherRouteImport } from './routes/weather'
+import { Route as UpgradeRouteImport } from './routes/upgrade'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as QaRouteImport } from './routes/qa'
+import { Route as PremiumSuccessRouteImport } from './routes/premium-success'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CropDoctorRouteImport } from './routes/crop-doctor'
@@ -21,10 +23,16 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as ApiPayfastNotifyRouteImport } from './routes/api/payfast/notify'
 
 const WeatherRoute = WeatherRouteImport.update({
   id: '/weather',
   path: '/weather',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UpgradeRoute = UpgradeRouteImport.update({
+  id: '/upgrade',
+  path: '/upgrade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TipsRoute = TipsRouteImport.update({
@@ -40,6 +48,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const QaRoute = QaRouteImport.update({
   id: '/qa',
   path: '/qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PremiumSuccessRoute = PremiumSuccessRouteImport.update({
+  id: '/premium-success',
+  path: '/premium-success',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -81,6 +94,11 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const ApiPayfastNotifyRoute = ApiPayfastNotifyRouteImport.update({
+  id: '/api/payfast/notify',
+  path: '/api/payfast/notify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,12 +106,15 @@ export interface FileRoutesByFullPath {
   '/crop-doctor': typeof CropDoctorRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/premium-success': typeof PremiumSuccessRoute
   '/qa': typeof QaRoute
   '/register': typeof RegisterRoute
   '/tips': typeof TipsRoute
+  '/upgrade': typeof UpgradeRoute
   '/weather': typeof WeatherRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/api/payfast/notify': typeof ApiPayfastNotifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -101,12 +122,15 @@ export interface FileRoutesByTo {
   '/crop-doctor': typeof CropDoctorRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/premium-success': typeof PremiumSuccessRoute
   '/qa': typeof QaRoute
   '/register': typeof RegisterRoute
   '/tips': typeof TipsRoute
+  '/upgrade': typeof UpgradeRoute
   '/weather': typeof WeatherRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/api/payfast/notify': typeof ApiPayfastNotifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,12 +140,15 @@ export interface FileRoutesById {
   '/crop-doctor': typeof CropDoctorRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/premium-success': typeof PremiumSuccessRoute
   '/qa': typeof QaRoute
   '/register': typeof RegisterRoute
   '/tips': typeof TipsRoute
+  '/upgrade': typeof UpgradeRoute
   '/weather': typeof WeatherRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
+  '/api/payfast/notify': typeof ApiPayfastNotifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,12 +158,15 @@ export interface FileRouteTypes {
     | '/crop-doctor'
     | '/dashboard'
     | '/login'
+    | '/premium-success'
     | '/qa'
     | '/register'
     | '/tips'
+    | '/upgrade'
     | '/weather'
     | '/profile'
     | '/tasks'
+    | '/api/payfast/notify'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,12 +174,15 @@ export interface FileRouteTypes {
     | '/crop-doctor'
     | '/dashboard'
     | '/login'
+    | '/premium-success'
     | '/qa'
     | '/register'
     | '/tips'
+    | '/upgrade'
     | '/weather'
     | '/profile'
     | '/tasks'
+    | '/api/payfast/notify'
   id:
     | '__root__'
     | '/'
@@ -158,12 +191,15 @@ export interface FileRouteTypes {
     | '/crop-doctor'
     | '/dashboard'
     | '/login'
+    | '/premium-success'
     | '/qa'
     | '/register'
     | '/tips'
+    | '/upgrade'
     | '/weather'
     | '/_authenticated/profile'
     | '/_authenticated/tasks'
+    | '/api/payfast/notify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -173,10 +209,13 @@ export interface RootRouteChildren {
   CropDoctorRoute: typeof CropDoctorRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  PremiumSuccessRoute: typeof PremiumSuccessRoute
   QaRoute: typeof QaRoute
   RegisterRoute: typeof RegisterRoute
   TipsRoute: typeof TipsRoute
+  UpgradeRoute: typeof UpgradeRoute
   WeatherRoute: typeof WeatherRoute
+  ApiPayfastNotifyRoute: typeof ApiPayfastNotifyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -186,6 +225,13 @@ declare module '@tanstack/react-router' {
       path: '/weather'
       fullPath: '/weather'
       preLoaderRoute: typeof WeatherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/upgrade': {
+      id: '/upgrade'
+      path: '/upgrade'
+      fullPath: '/upgrade'
+      preLoaderRoute: typeof UpgradeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tips': {
@@ -207,6 +253,13 @@ declare module '@tanstack/react-router' {
       path: '/qa'
       fullPath: '/qa'
       preLoaderRoute: typeof QaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/premium-success': {
+      id: '/premium-success'
+      path: '/premium-success'
+      fullPath: '/premium-success'
+      preLoaderRoute: typeof PremiumSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -265,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/payfast/notify': {
+      id: '/api/payfast/notify'
+      path: '/api/payfast/notify'
+      fullPath: '/api/payfast/notify'
+      preLoaderRoute: typeof ApiPayfastNotifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -289,10 +349,13 @@ const rootRouteChildren: RootRouteChildren = {
   CropDoctorRoute: CropDoctorRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  PremiumSuccessRoute: PremiumSuccessRoute,
   QaRoute: QaRoute,
   RegisterRoute: RegisterRoute,
   TipsRoute: TipsRoute,
+  UpgradeRoute: UpgradeRoute,
   WeatherRoute: WeatherRoute,
+  ApiPayfastNotifyRoute: ApiPayfastNotifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

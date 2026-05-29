@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { diagnoseCrop } from "@/lib/ai.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
@@ -8,9 +8,14 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, Upload, Sparkles, Leaf } from "lucide-react";
+import { Loader2, Upload, Sparkles, Leaf, Lock } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import { useAuth } from "@/lib/auth";
+import { usePremium } from "@/lib/premium";
+import { supabase } from "@/integrations/supabase/client";
+
+const FREE_DAILY_LIMIT = 3;
 
 export const Route = createFileRoute("/crop-doctor")({
   head: () => ({
@@ -26,12 +31,30 @@ export const Route = createFileRoute("/crop-doctor")({
 
 function CropDoctorPage() {
   const diagnose = useServerFn(diagnoseCrop);
+  const { user } = useAuth();
+  const { isPremium, openUpgrade } = usePremium();
   const [preview, setPreview] = useState<string | null>(null);
   const [crop, setCrop] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [usedToday, setUsedToday] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("diagnosis_usage")
+      .select("count")
+      .eq("user_id", user.id)
+      .eq("used_on", today)
+      .maybeSingle()
+      .then(({ data }) => setUsedToday(data?.count ?? 0));
+  }, [user, today]);
+
+  const remaining = Math.max(0, FREE_DAILY_LIMIT - usedToday);
 
   const onFile = (f: File | undefined) => {
     if (!f) return;
@@ -41,13 +64,27 @@ function CropDoctorPage() {
     r.readAsDataURL(f);
   };
 
+  const incrementUsage = async () => {
+    if (!user) return;
+    const next = usedToday + 1;
+    setUsedToday(next);
+    await supabase
+      .from("diagnosis_usage")
+      .upsert({ user_id: user.id, used_on: today, count: next, updated_at: new Date().toISOString() }, { onConflict: "user_id,used_on" });
+  };
+
   const submit = async () => {
     if (!preview) return toast.error("Please upload a photo first");
+    if (!isPremium && remaining <= 0) {
+      openUpgrade("Unlimited Crop Doctor diagnoses");
+      return;
+    }
     setLoading(true);
     setResult(null);
     try {
       const res = await diagnose({ data: { imageDataUrl: preview, crop, notes } });
       setResult(res.text);
+      if (!isPremium) await incrementUsage();
     } catch (e: any) {
       toast.error(e?.message ?? "Diagnosis failed");
     } finally {
@@ -69,6 +106,11 @@ function CropDoctorPage() {
             AI <span className="text-primary">Crop Doctor</span>
           </h1>
           <p className="mt-3 text-muted-foreground">Snap a leaf, get a diagnosis in seconds.</p>
+          {!isPremium && (
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs text-amber-700 dark:text-amber-300">
+              <Lock className="h-3 w-3" /> Free plan: {remaining} of {FREE_DAILY_LIMIT} diagnoses left today
+            </p>
+          )}
         </div>
       </div>
 
