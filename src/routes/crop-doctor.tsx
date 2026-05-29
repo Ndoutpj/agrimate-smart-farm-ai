@@ -106,6 +106,11 @@ function CropDoctorPage() {
             AI <span className="text-primary">Crop Doctor</span>
           </h1>
           <p className="mt-3 text-muted-foreground">Snap a leaf, get a diagnosis in seconds.</p>
+          {!isPremium && (
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs text-amber-700 dark:text-amber-300">
+              <Lock className="h-3 w-3" /> Free plan: {remaining} of {FREE_DAILY_LIMIT} diagnoses left today
+            </p>
+          )}
         </div>
       </div>
 

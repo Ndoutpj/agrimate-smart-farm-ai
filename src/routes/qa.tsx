@@ -6,9 +6,10 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Loader2, Send, MessageCircle, Sprout } from "lucide-react";
+import { Loader2, Send, MessageCircle, Sprout, Lock } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import { usePremium } from "@/lib/premium";
 
 export const Route = createFileRoute("/qa")({
   head: () => ({
@@ -33,6 +34,7 @@ const SUGGESTIONS = [
 
 function QAPage() {
   const ask = useServerFn(askFarmer);
+  const { isPremium, openUpgrade } = usePremium();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,10 @@ function QAPage() {
   }, [messages, loading]);
 
   const send = async (text: string) => {
+    if (!isPremium) {
+      openUpgrade("Posting in the Q&A community");
+      return;
+    }
     const q = text.trim();
     if (!q || loading) return;
     const next: Msg[] = [...messages, { role: "user", content: q }];
