@@ -6,8 +6,9 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, LogOut, User, ListChecks, LayoutDashboard } from "lucide-react";
+import { Menu, LogOut, User, ListChecks, LayoutDashboard, Sparkles, Crown } from "lucide-react";
 import { useAuth, initials } from "@/lib/auth";
+import { usePremium } from "@/lib/premium";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard" },
@@ -20,6 +21,7 @@ const NAV = [
 
 export function SiteHeader() {
   const { user, signOut } = useAuth();
+  const { isPremium } = usePremium();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -44,6 +46,18 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          {user && !isPremium && (
+            <Link to="/upgrade" className="hidden sm:inline-flex">
+              <Button size="sm" variant="outline" className="border-amber-400/50 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-300">
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Upgrade
+              </Button>
+            </Link>
+          )}
+          {user && isPremium && (
+            <span className="hidden items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm sm:inline-flex">
+              <Crown className="h-3 w-3" /> Premium
+            </span>
+          )}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
