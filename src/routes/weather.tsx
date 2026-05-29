@@ -3,11 +3,12 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { MapPin, Droplets, Wind, Thermometer, Sun, CloudRain, Loader2, AlertTriangle, Clock } from "lucide-react";
+import { MapPin, Droplets, Wind, Thermometer, Sun, CloudRain, Loader2, AlertTriangle, Clock, Lock } from "lucide-react";
 import {
   Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid,
   Bar, BarChart,
 } from "recharts";
+import { usePremium } from "@/lib/premium";
 
 const REFRESH_MS = 30 * 60 * 1000; // 30 minutes
 
@@ -84,7 +85,7 @@ async function fetchWeather(lat: number, lon: number): Promise<WeatherData> {
     `&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,precipitation` +
     `&hourly=temperature_2m,precipitation` +
     `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max` +
-    `&timezone=auto&forecast_days=7`;
+    `&timezone=auto&forecast_days=14`;
   const r = await fetch(url);
   if (!r.ok) throw new Error("Weather request failed");
   const j = await r.json();
@@ -145,6 +146,7 @@ function Stat({ icon: Icon, label, value }: any) {
 }
 
 function WeatherPage() {
+  const { isPremium, openUpgrade } = usePremium();
   const [data, setData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -316,12 +318,27 @@ function WeatherPage() {
             </Card>
 
             <div>
-              <h2 className="mb-3 font-semibold">7-day outlook</h2>
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="font-semibold">{isPremium ? "14-day outlook" : "7-day outlook"}</h2>
+                {!isPremium && (
+                  <button
+                    onClick={() => openUpgrade("14-day weather forecast")}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-300"
+                  >
+                    <Lock className="h-3 w-3" /> Unlock 14 days
+                  </button>
+                )}
+              </div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
-                {data.daily.map((d) => {
+                {data.daily.map((d, idx) => {
                   const w = WMO[d.code] ?? { label: "—", emoji: "🌡️" };
+                  const isLocked = !isPremium && idx >= 7;
                   return (
-                    <Card key={d.date} className="tilt-card p-4 text-center">
+                    <Card
+                      key={d.date}
+                      onClick={isLocked ? () => openUpgrade("14-day weather forecast") : undefined}
+                      className={`tilt-card relative p-4 text-center ${isLocked ? "cursor-pointer overflow-hidden" : ""}`}
+                    >
                       <div className="text-xs text-muted-foreground">
                         {new Date(d.date).toLocaleDateString(undefined, { weekday: "short", day: "numeric" })}
                       </div>
@@ -331,6 +348,13 @@ function WeatherPage() {
                       <div className="mt-2 flex items-center justify-center gap-1 text-[11px] text-primary">
                         <Droplets className="h-3 w-3" /> {d.rainProb}% · {d.precip}mm
                       </div>
+                      {isLocked && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-[2px]">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-1 text-[10px] font-medium text-amber-700 dark:text-amber-300">
+                            <Lock className="h-3 w-3" /> Premium
+                          </span>
+                        </div>
+                      )}
                     </Card>
                   );
                 })}
