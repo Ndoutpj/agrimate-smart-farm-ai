@@ -35,6 +35,8 @@ function timeGreeting() {
   if (hour < 21) return "Good evening, farmer 👋";
   return "Good night, farmer 👋";
 }
+
+function Stat({ icon: Icon, label, value, trend }: any) {
   return (
     <Card className="tilt-card p-5">
       <div className="flex items-center justify-between">
