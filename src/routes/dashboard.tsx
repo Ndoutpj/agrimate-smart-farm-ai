@@ -35,18 +35,16 @@ function timeGreeting() {
   return "Good night, farmer 👋";
 }
 
-function Stat({ icon: Icon, label, value, trend }: any) {
-  return (
-    <Card className="tilt-card p-5">
-      <div className="flex items-center justify-between">
-        <div className="rounded-xl bg-primary/10 p-2.5 text-primary"><Icon className="h-5 w-5" /></div>
-        {trend && <span className="text-xs font-medium text-primary">{trend}</span>}
-      </div>
-      <div className="mt-3 text-2xl font-bold">{value}</div>
-      <div className="text-xs text-muted-foreground">{label}</div>
-    </Card>
-  );
-}
+const Stat = ({ icon: Icon, label, value, trend }: any) => (
+  <Card className="tilt-card p-5">
+    <div className="flex items-center justify-between">
+      <div className="rounded-xl bg-primary/10 p-2.5 text-primary"><Icon className="h-5 w-5" /></div>
+      {trend && <span className="text-xs font-medium text-primary">{trend}</span>}
+    </div>
+    <div className="mt-3 text-2xl font-bold">{value}</div>
+    <div className="text-xs text-muted-foreground">{label}</div>
+  </Card>
+);
 
 function Dashboard() {
   return (
