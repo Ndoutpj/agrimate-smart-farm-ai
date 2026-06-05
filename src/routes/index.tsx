@@ -175,61 +175,8 @@ function Index() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="mx-auto max-w-6xl px-4 py-20">
-        <div className="grid items-center gap-8 rounded-3xl border border-border/70 bg-card p-8 shadow-[var(--shadow-sm)] sm:p-12 lg:grid-cols-2">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-earth">AgriMate Premium</span>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight">Go further for <span className="text-primary">R49/month</span></h2>
-            <p className="mt-3 text-muted-foreground">
-              Unlock pro mentorship, advanced analytics, priority AI crop diagnosis and extended weather
-              forecasting. Cancel anytime.
-            </p>
-            <ul className="mt-6 space-y-2.5 text-sm">
-              {[
-                "Pro mentorship from expert agronomists",
-                "Priority AI crop diagnosis",
-                "Advanced analytics & budget tracking",
-                "Extended 14-day weather forecasting",
-                "Premium community groups",
-              ].map((p) => (
-                <li key={p} className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 text-primary" /> {p}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Button size="lg" className="bg-primary hover:bg-primary/90">Upgrade with PayPal</Button>
-              <Button size="lg" variant="ghost">See full benefits</Button>
-            </div>
-          </div>
-          <div className="relative">
-            <div
-              aria-hidden
-              className="absolute inset-0 -z-10 rounded-3xl opacity-70 blur-2xl"
-              style={{ background: "var(--gradient-hero)" }}
-            />
-            <div className="rounded-3xl bg-[var(--gradient-hero)] p-8 text-primary-foreground shadow-[var(--shadow-lg)]">
-              <div className="flex items-center justify-between">
-                <span className="text-sm opacity-90">Premium</span>
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <div className="mt-6 flex items-end gap-1">
-                <span className="text-5xl font-semibold">R49</span>
-                <span className="mb-2 text-sm opacity-80">/month</span>
-              </div>
-              <p className="mt-2 text-sm opacity-90">Billed monthly. One subscription, every premium feature.</p>
-              <div className="mt-8 grid grid-cols-2 gap-3 text-sm">
-                {["AI Crop Doctor+", "Extended forecasts", "Mentorship", "Premium groups"].map((b) => (
-                  <div key={b} className="rounded-lg bg-white/10 px-3 py-2 backdrop-blur">
-                    {b}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
+
 
       <footer className="border-t border-border/60 py-8">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 text-sm text-muted-foreground sm:flex-row">
@@ -239,7 +186,7 @@ function Index() {
           </div>
           <div className="flex items-center gap-5">
             <a href="#features" className="hover:text-foreground">Features</a>
-            <a href="#pricing" className="hover:text-foreground">Pricing</a>
+            <a href="#calculator" className="hover:text-foreground">Calculator</a>
           </div>
         </div>
       </footer>
