@@ -56,7 +56,7 @@ function Dashboard() {
       <div className="relative overflow-hidden border-b">
         <div className="absolute inset-0 -z-10 bg-[var(--gradient-soft)]" />
         <div className="mx-auto max-w-6xl px-4 py-10 animate-fade-up">
-          <p className="text-sm text-muted-foreground">Good morning, farmer 👋</p>
+          <p className="text-sm text-muted-foreground">{timeGreeting()}</p>
           <h1 className="text-3xl font-bold md:text-4xl">Your farm at a glance</h1>
         </div>
       </div>
