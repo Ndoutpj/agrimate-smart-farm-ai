@@ -27,6 +27,14 @@ const rainData = [
   { d: "Thu", r: 8 }, { d: "Fri", r: 22 }, { d: "Sat", r: 6 }, { d: "Sun", r: 2 },
 ];
 
+function timeGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning, farmer 👋";
+  if (hour < 17) return "Good afternoon, farmer 👋";
+  if (hour < 21) return "Good evening, farmer 👋";
+  return "Good night, farmer 👋";
+}
+
 function Stat({ icon: Icon, label, value, trend }: any) {
   return (
     <Card className="tilt-card p-5">
@@ -47,7 +55,7 @@ function Dashboard() {
       <div className="relative overflow-hidden border-b">
         <div className="absolute inset-0 -z-10 bg-[var(--gradient-soft)]" />
         <div className="mx-auto max-w-6xl px-4 py-10 animate-fade-up">
-          <p className="text-sm text-muted-foreground">Good morning, farmer 👋</p>
+          <p className="text-sm text-muted-foreground">{timeGreeting()}</p>
           <h1 className="text-3xl font-bold md:text-4xl">Your farm at a glance</h1>
         </div>
       </div>
