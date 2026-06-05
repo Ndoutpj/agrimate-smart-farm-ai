@@ -28,7 +28,13 @@ const rainData = [
   { d: "Thu", r: 8 }, { d: "Fri", r: 22 }, { d: "Sat", r: 6 }, { d: "Sun", r: 2 },
 ];
 
-function Stat({ icon: Icon, label, value, trend }: any) {
+function timeGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning, farmer 👋";
+  if (hour < 17) return "Good afternoon, farmer 👋";
+  if (hour < 21) return "Good evening, farmer 👋";
+  return "Good night, farmer 👋";
+}
   return (
     <Card className="tilt-card p-5">
       <div className="flex items-center justify-between">
