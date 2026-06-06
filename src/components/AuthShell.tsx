@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Sparkles, Check, Loader2, Fingerprint } from "lucide-react";
+import { Sparkles, Check, Loader2, Fingerprint, Sprout, ShoppingBasket, Wrench } from "lucide-react";
 import sideImage from "@/assets/auth-side.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -39,6 +39,7 @@ export function AuthShell({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [accountType, setAccountType] = useState<"farmer" | "buyer" | "service_provider">("farmer");
   const [remember, setRemember] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -64,7 +65,7 @@ export function AuthShell({
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { full_name: name },
+            data: { full_name: name, account_type: accountType },
           },
         });
         if (error) throw error;
