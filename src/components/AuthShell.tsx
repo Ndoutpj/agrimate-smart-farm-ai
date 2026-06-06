@@ -156,11 +156,49 @@ export function AuthShell({
 
           <form onSubmit={onSubmit} className="mt-8 space-y-4">
             {mode === "register" && (
-              <div className="space-y-1.5">
-                <Label htmlFor="name">Full name</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Tshifhiwa Junior" autoComplete="name" />
-                {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
-              </div>
+              <>
+                <div className="space-y-1.5">
+                  <Label htmlFor="name">Full name</Label>
+                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Tshifhiwa Junior" autoComplete="name" />
+                  {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label>I am a…</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {([
+                      { v: "farmer", icon: Sprout, label: "Farmer", emoji: "🌱" },
+                      { v: "buyer", icon: ShoppingBasket, label: "Buyer", emoji: "🛒" },
+                      { v: "service_provider", icon: Wrench, label: "Service", emoji: "🔧" },
+                    ] as const).map((opt) => {
+                      const Icon = opt.icon;
+                      const active = accountType === opt.v;
+                      return (
+                        <button
+                          key={opt.v}
+                          type="button"
+                          onClick={() => setAccountType(opt.v)}
+                          className={
+                            "flex flex-col items-center gap-1 rounded-xl border p-3 text-xs font-medium transition " +
+                            (active
+                              ? "border-primary bg-primary/10 text-primary shadow-[var(--shadow-glow)]"
+                              : "border-border hover:border-primary/40 hover:bg-muted")
+                          }
+                          aria-pressed={active}
+                        >
+                          <span className="text-lg leading-none">{opt.emoji}</span>
+                          <Icon className="h-4 w-4" />
+                          <span>{opt.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    {accountType === "farmer" && "Plan, sell produce, post jobs, browse equipment."}
+                    {accountType === "buyer" && "Browse and buy produce direct from verified farmers."}
+                    {accountType === "service_provider" && "List equipment & services, accept bookings, track earnings."}
+                  </p>
+                </div>
+              </>
             )}
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
