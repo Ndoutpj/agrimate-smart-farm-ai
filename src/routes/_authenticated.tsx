@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { useProfile } from "@/lib/profile";
+import { RoleBottomNav } from "@/components/RoleBottomNav";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -11,6 +13,7 @@ export const Route = createFileRoute("/_authenticated")({
 
 function AuthGate() {
   const { user, loading } = useAuth();
+  const { profile } = useProfile();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +32,10 @@ function AuthGate() {
   return (
     <>
       <TaskNotifier userId={user.id} />
-      <Outlet />
+      <div className="pb-20 md:pb-0">
+        <Outlet />
+      </div>
+      <RoleBottomNav accountType={profile?.account_type ?? "farmer"} />
     </>
   );
 }
