@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Save, MapPin, Wheat, Beef } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Loader2, Save, MapPin, Wheat, Beef, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, initials } from "@/lib/auth";
+import { useProfile } from "@/lib/profile";
+import { VerificationBadge } from "@/components/VerificationBadge";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -57,6 +60,24 @@ function ProfilePage() {
     else toast.success("Farm profile updated");
   };
 
+  const { profile: meta, refresh } = useProfile();
+
+  const toggleSpMode = async (val: boolean) => {
+    if (!user) return;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ is_service_provider_enabled: val })
+      .eq("id", user.id);
+    if (error) return toast.error(error.message);
+    toast.success(val ? "Service Provider mode enabled" : "Service Provider mode disabled");
+    refresh();
+  };
+
+  const accountLabel =
+    meta?.account_type === "buyer" ? "🛒 Buyer" :
+    meta?.account_type === "service_provider" ? "🔧 Service Provider" :
+    "🌱 Farmer";
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -65,11 +86,33 @@ function ProfilePage() {
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-glow text-2xl font-semibold text-primary-foreground shadow-[var(--shadow-glow)]">
             {initials(p.full_name, user?.email)}
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-bold">My Farm</h1>
-            <p className="text-sm text-muted-foreground">{user?.email}</p>
+            <p className="truncate text-sm text-muted-foreground">{user?.email}</p>
+            <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs font-medium">{accountLabel}</span>
+              {meta && <VerificationBadge status={meta.verification_status} />}
+            </div>
           </div>
         </div>
+
+        {meta?.account_type === "farmer" && (
+          <Card className="flex items-center justify-between gap-4 p-4">
+            <div className="flex items-start gap-3">
+              <div className="rounded-lg bg-primary/10 p-2 text-primary"><Wrench className="h-4 w-4" /></div>
+              <div>
+                <div className="text-sm font-medium">Service Provider mode</div>
+                <div className="text-xs text-muted-foreground">Also list equipment, drones, or transport you own.</div>
+              </div>
+            </div>
+            <Switch
+              checked={!!meta?.is_service_provider_enabled}
+              onCheckedChange={toggleSpMode}
+              aria-label="Toggle service provider mode"
+            />
+          </Card>
+        )}
+
 
 
 

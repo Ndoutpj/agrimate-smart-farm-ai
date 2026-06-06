@@ -79,6 +79,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_type: Database["public"]["Enums"]["account_type"]
           avatar_url: string | null
           created_at: string
           crops: string[] | null
@@ -87,6 +88,7 @@ export type Database = {
           full_name: string | null
           id: string
           is_premium: boolean
+          is_service_provider_enabled: boolean
           livestock: string[] | null
           location: string | null
           next_billing_date: string | null
@@ -96,8 +98,12 @@ export type Database = {
           subscription_started_at: string | null
           subscription_status: string | null
           updated_at: string
+          verification_status: Database["public"]["Enums"]["verification_status"]
+          verification_submitted_at: string | null
+          verified_at: string | null
         }
         Insert: {
+          account_type?: Database["public"]["Enums"]["account_type"]
           avatar_url?: string | null
           created_at?: string
           crops?: string[] | null
@@ -106,6 +112,7 @@ export type Database = {
           full_name?: string | null
           id: string
           is_premium?: boolean
+          is_service_provider_enabled?: boolean
           livestock?: string[] | null
           location?: string | null
           next_billing_date?: string | null
@@ -115,8 +122,12 @@ export type Database = {
           subscription_started_at?: string | null
           subscription_status?: string | null
           updated_at?: string
+          verification_status?: Database["public"]["Enums"]["verification_status"]
+          verification_submitted_at?: string | null
+          verified_at?: string | null
         }
         Update: {
+          account_type?: Database["public"]["Enums"]["account_type"]
           avatar_url?: string | null
           created_at?: string
           crops?: string[] | null
@@ -125,6 +136,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_premium?: boolean
+          is_service_provider_enabled?: boolean
           livestock?: string[] | null
           location?: string | null
           next_billing_date?: string | null
@@ -134,6 +146,9 @@ export type Database = {
           subscription_started_at?: string | null
           subscription_status?: string | null
           updated_at?: string
+          verification_status?: Database["public"]["Enums"]["verification_status"]
+          verification_submitted_at?: string | null
+          verified_at?: string | null
         }
         Relationships: []
       }
@@ -190,7 +205,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      account_type: "farmer" | "buyer" | "service_provider"
+      verification_status: "unverified" | "pending" | "verified"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -317,6 +333,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      account_type: ["farmer", "buyer", "service_provider"],
+      verification_status: ["unverified", "pending", "verified"],
+    },
   },
 } as const
