@@ -38,6 +38,136 @@ export type Database = {
         }
         Relationships: []
       }
+      listings: {
+        Row: {
+          created_at: string
+          crop: string
+          description: string | null
+          farmer_id: string
+          id: string
+          image_url: string | null
+          location: string | null
+          price_per_unit: number
+          quantity_available: number
+          status: string
+          title: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          crop: string
+          description?: string | null
+          farmer_id: string
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          price_per_unit: number
+          quantity_available: number
+          status?: string
+          title: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          crop?: string
+          description?: string | null
+          farmer_id?: string
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          price_per_unit?: number
+          quantity_available?: number
+          status?: string
+          title?: string
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          order_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          order_id: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          buyer_id: string
+          contact_phone: string | null
+          created_at: string
+          farmer_id: string
+          id: string
+          listing_id: string
+          notes: string | null
+          quantity: number
+          status: string
+          total_price: number
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          contact_phone?: string | null
+          created_at?: string
+          farmer_id: string
+          id?: string
+          listing_id: string
+          notes?: string | null
+          quantity: number
+          status?: string
+          total_price: number
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          contact_phone?: string | null
+          created_at?: string
+          farmer_id?: string
+          id?: string
+          listing_id?: string
+          notes?: string | null
+          quantity?: number
+          status?: string
+          total_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_events: {
         Row: {
           amount_gross: number | null
@@ -151,6 +281,44 @@ export type Database = {
           verified_at?: string | null
         }
         Relationships: []
+      }
+      ratings: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          order_id: string
+          ratee_id: string
+          rater_id: string
+          stars: number
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id: string
+          ratee_id: string
+          rater_id: string
+          stars: number
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string
+          ratee_id?: string
+          rater_id?: string
+          stars?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ratings_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tasks: {
         Row: {
