@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sprout, Droplets, CloudSun, Bug, MessageCircle, Calculator, TrendingUp, Leaf } from "lucide-react";
+import { Sprout, Droplets, CloudSun, Bug, MessageCircle, Calculator, TrendingUp, Leaf, Wrench, Briefcase } from "lucide-react";
 import {
   Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid,
   Bar, BarChart,
