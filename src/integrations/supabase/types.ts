@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          contact_phone: string | null
+          created_at: string
+          end_date: string | null
+          farmer_id: string
+          hours: number | null
+          id: string
+          notes: string | null
+          provider_id: string
+          service_id: string
+          start_date: string
+          status: string
+          total_price: number
+          updated_at: string
+        }
+        Insert: {
+          contact_phone?: string | null
+          created_at?: string
+          end_date?: string | null
+          farmer_id: string
+          hours?: number | null
+          id?: string
+          notes?: string | null
+          provider_id: string
+          service_id: string
+          start_date: string
+          status?: string
+          total_price: number
+          updated_at?: string
+        }
+        Update: {
+          contact_phone?: string | null
+          created_at?: string
+          end_date?: string | null
+          farmer_id?: string
+          hours?: number | null
+          id?: string
+          notes?: string | null
+          provider_id?: string
+          service_id?: string
+          start_date?: string
+          status?: string
+          total_price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       diagnosis_usage: {
         Row: {
           count: number
@@ -35,6 +83,93 @@ export type Database = {
           updated_at?: string
           used_on?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      job_applications: {
+        Row: {
+          applicant_id: string
+          contact_phone: string | null
+          cover_note: string | null
+          created_at: string
+          farmer_id: string
+          id: string
+          job_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          applicant_id: string
+          contact_phone?: string | null
+          cover_note?: string | null
+          created_at?: string
+          farmer_id: string
+          id?: string
+          job_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          applicant_id?: string
+          contact_phone?: string | null
+          cover_note?: string | null
+          created_at?: string
+          farmer_id?: string
+          id?: string
+          job_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      jobs: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          end_date: string | null
+          farmer_id: string
+          id: string
+          location: string | null
+          pay_rate: number
+          pay_unit: string
+          start_date: string | null
+          status: string
+          title: string
+          updated_at: string
+          workers_needed: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          farmer_id: string
+          id?: string
+          location?: string | null
+          pay_rate: number
+          pay_unit?: string
+          start_date?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          workers_needed?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          farmer_id?: string
+          id?: string
+          location?: string | null
+          pay_rate?: number
+          pay_unit?: string
+          start_date?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          workers_needed?: number
         }
         Relationships: []
       }
@@ -319,6 +454,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      services: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          location: string | null
+          price_per_unit: number
+          provider_id: string
+          service_area: string | null
+          status: string
+          title: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          price_per_unit: number
+          provider_id: string
+          service_area?: string | null
+          status?: string
+          title: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          price_per_unit?: number
+          provider_id?: string
+          service_area?: string | null
+          status?: string
+          title?: string
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       tasks: {
         Row: {
