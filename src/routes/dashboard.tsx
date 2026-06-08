@@ -128,6 +128,19 @@ function Dashboard() {
           </Card></Link>
         </div>
 
+        <div className="grid gap-4 md:grid-cols-2">
+          <Link to="/equipment"><Card className="tilt-card group p-5">
+            <Wrench className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">Equipment & Services</h3>
+            <p className="text-sm text-muted-foreground">Book tractors, drones, transport.</p>
+          </Card></Link>
+          <Link to="/jobs"><Card className="tilt-card group p-5">
+            <Briefcase className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">Jobs Board</h3>
+            <p className="text-sm text-muted-foreground">Hire workers or find farm work.</p>
+          </Card></Link>
+        </div>
+
         <div className="flex justify-end">
           <Link to="/tips"><Button variant="outline">Browse farming tips →</Button></Link>
         </div>
