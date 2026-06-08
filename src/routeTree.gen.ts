@@ -28,6 +28,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedMarketRouteImport } from './routes/_authenticated/market'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
+import { Route as AuthenticatedEquipmentRouteImport } from './routes/_authenticated/equipment'
 import { Route as AuthenticatedEarningsRouteImport } from './routes/_authenticated/earnings'
 import { Route as AuthenticatedBrowseRouteImport } from './routes/_authenticated/browse'
 import { Route as AuthenticatedBookingsRouteImport } from './routes/_authenticated/bookings'
@@ -127,6 +128,11 @@ const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedEquipmentRoute = AuthenticatedEquipmentRouteImport.update({
+  id: '/equipment',
+  path: '/equipment',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedEarningsRoute = AuthenticatedEarningsRouteImport.update({
   id: '/earnings',
   path: '/earnings',
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/bookings': typeof AuthenticatedBookingsRoute
   '/browse': typeof AuthenticatedBrowseRoute
   '/earnings': typeof AuthenticatedEarningsRoute
+  '/equipment': typeof AuthenticatedEquipmentRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/market': typeof AuthenticatedMarketRoute
   '/orders': typeof AuthenticatedOrdersRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/bookings': typeof AuthenticatedBookingsRoute
   '/browse': typeof AuthenticatedBrowseRoute
   '/earnings': typeof AuthenticatedEarningsRoute
+  '/equipment': typeof AuthenticatedEquipmentRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/market': typeof AuthenticatedMarketRoute
   '/orders': typeof AuthenticatedOrdersRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/_authenticated/bookings': typeof AuthenticatedBookingsRoute
   '/_authenticated/browse': typeof AuthenticatedBrowseRoute
   '/_authenticated/earnings': typeof AuthenticatedEarningsRoute
+  '/_authenticated/equipment': typeof AuthenticatedEquipmentRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/market': typeof AuthenticatedMarketRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/browse'
     | '/earnings'
+    | '/equipment'
     | '/history'
     | '/market'
     | '/orders'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/browse'
     | '/earnings'
+    | '/equipment'
     | '/history'
     | '/market'
     | '/orders'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/_authenticated/bookings'
     | '/_authenticated/browse'
     | '/_authenticated/earnings'
+    | '/_authenticated/equipment'
     | '/_authenticated/history'
     | '/_authenticated/market'
     | '/_authenticated/orders'
@@ -449,6 +461,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHistoryRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/equipment': {
+      id: '/_authenticated/equipment'
+      path: '/equipment'
+      fullPath: '/equipment'
+      preLoaderRoute: typeof AuthenticatedEquipmentRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/earnings': {
       id: '/_authenticated/earnings'
       path: '/earnings'
@@ -484,6 +503,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedBookingsRoute: typeof AuthenticatedBookingsRoute
   AuthenticatedBrowseRoute: typeof AuthenticatedBrowseRoute
   AuthenticatedEarningsRoute: typeof AuthenticatedEarningsRoute
+  AuthenticatedEquipmentRoute: typeof AuthenticatedEquipmentRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedMarketRoute: typeof AuthenticatedMarketRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
@@ -497,6 +517,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBookingsRoute: AuthenticatedBookingsRoute,
   AuthenticatedBrowseRoute: AuthenticatedBrowseRoute,
   AuthenticatedEarningsRoute: AuthenticatedEarningsRoute,
+  AuthenticatedEquipmentRoute: AuthenticatedEquipmentRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedMarketRoute: AuthenticatedMarketRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
