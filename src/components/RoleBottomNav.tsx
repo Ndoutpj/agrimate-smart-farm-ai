@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Leaf, ShoppingCart, BarChart3, User, Search, Package, History, Wrench, Calendar, Wallet } from "lucide-react";
+import { Home, Leaf, ShoppingCart, User, Search, Package, History, Wrench, Calendar, Wallet, Briefcase } from "lucide-react";
 import type { AccountType } from "@/lib/profile";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,7 @@ const FARMER: Item[] = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/profile", label: "My Farm", icon: Leaf },
   { to: "/market", label: "Market", icon: ShoppingCart },
-  { to: "/stats", label: "Stats", icon: BarChart3 },
+  { to: "/jobs", label: "Jobs", icon: Briefcase },
   { to: "/profile", label: "Profile", icon: User },
 ];
 
