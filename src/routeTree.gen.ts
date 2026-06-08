@@ -27,6 +27,7 @@ import { Route as AuthenticatedServicesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedMarketRouteImport } from './routes/_authenticated/market'
+import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedEquipmentRouteImport } from './routes/_authenticated/equipment'
 import { Route as AuthenticatedEarningsRouteImport } from './routes/_authenticated/earnings'
@@ -123,6 +124,11 @@ const AuthenticatedMarketRoute = AuthenticatedMarketRouteImport.update({
   path: '/market',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedJobsRoute = AuthenticatedJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/earnings': typeof AuthenticatedEarningsRoute
   '/equipment': typeof AuthenticatedEquipmentRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/jobs': typeof AuthenticatedJobsRoute
   '/market': typeof AuthenticatedMarketRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/earnings': typeof AuthenticatedEarningsRoute
   '/equipment': typeof AuthenticatedEquipmentRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/jobs': typeof AuthenticatedJobsRoute
   '/market': typeof AuthenticatedMarketRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/_authenticated/earnings': typeof AuthenticatedEarningsRoute
   '/_authenticated/equipment': typeof AuthenticatedEquipmentRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_authenticated/jobs': typeof AuthenticatedJobsRoute
   '/_authenticated/market': typeof AuthenticatedMarketRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/earnings'
     | '/equipment'
     | '/history'
+    | '/jobs'
     | '/market'
     | '/orders'
     | '/profile'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/earnings'
     | '/equipment'
     | '/history'
+    | '/jobs'
     | '/market'
     | '/orders'
     | '/profile'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/_authenticated/earnings'
     | '/_authenticated/equipment'
     | '/_authenticated/history'
+    | '/_authenticated/jobs'
     | '/_authenticated/market'
     | '/_authenticated/orders'
     | '/_authenticated/profile'
@@ -454,6 +466,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMarketRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/jobs': {
+      id: '/_authenticated/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof AuthenticatedJobsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/history': {
       id: '/_authenticated/history'
       path: '/history'
@@ -505,6 +524,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedEarningsRoute: typeof AuthenticatedEarningsRoute
   AuthenticatedEquipmentRoute: typeof AuthenticatedEquipmentRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
+  AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
   AuthenticatedMarketRoute: typeof AuthenticatedMarketRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -519,6 +539,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedEarningsRoute: AuthenticatedEarningsRoute,
   AuthenticatedEquipmentRoute: AuthenticatedEquipmentRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
+  AuthenticatedJobsRoute: AuthenticatedJobsRoute,
   AuthenticatedMarketRoute: AuthenticatedMarketRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
