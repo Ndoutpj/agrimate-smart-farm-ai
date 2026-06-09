@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sprout, Droplets, CloudSun, Bug, MessageCircle, Calculator, TrendingUp, Leaf, Wrench, Briefcase } from "lucide-react";
+import { Sprout, Droplets, CloudSun, Bug, MessageCircle, Calculator, TrendingUp, Leaf, Wrench, Briefcase, BookOpen, BarChart3 } from "lucide-react";
 import {
   Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid,
   Bar, BarChart,
@@ -125,6 +125,29 @@ function Dashboard() {
             <Calculator className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
             <h3 className="font-semibold">Farm Calculator</h3>
             <p className="text-sm text-muted-foreground">Plan inputs, water, profit.</p>
+          </Card></Link>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Link to={"/my-farm" as never}><Card className="tilt-card group p-5">
+            <Leaf className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">My Farm</h3>
+            <p className="text-sm text-muted-foreground">Crops, rotation, fields.</p>
+          </Card></Link>
+          <Link to={"/journal" as never}><Card className="tilt-card group p-5">
+            <BookOpen className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">Farm Journal</h3>
+            <p className="text-sm text-muted-foreground">Daily logbook.</p>
+          </Card></Link>
+          <Link to={"/irrigation" as never}><Card className="tilt-card group p-5">
+            <Droplets className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">Irrigation</h3>
+            <p className="text-sm text-muted-foreground">Watering schedule.</p>
+          </Card></Link>
+          <Link to={"/stats" as never}><Card className="tilt-card group p-5">
+            <BarChart3 className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">Stats & P&amp;L</h3>
+            <p className="text-sm text-muted-foreground">Profit per crop.</p>
           </Card></Link>
         </div>
 
