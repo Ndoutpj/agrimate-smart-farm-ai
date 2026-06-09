@@ -26,8 +26,11 @@ import { Route as AuthenticatedStatsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedServicesRouteImport } from './routes/_authenticated/services'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
+import { Route as AuthenticatedMyFarmRouteImport } from './routes/_authenticated/my-farm'
 import { Route as AuthenticatedMarketRouteImport } from './routes/_authenticated/market'
+import { Route as AuthenticatedJournalRouteImport } from './routes/_authenticated/journal'
 import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
+import { Route as AuthenticatedIrrigationRouteImport } from './routes/_authenticated/irrigation'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedEquipmentRouteImport } from './routes/_authenticated/equipment'
 import { Route as AuthenticatedEarningsRouteImport } from './routes/_authenticated/earnings'
@@ -119,14 +122,29 @@ const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedMyFarmRoute = AuthenticatedMyFarmRouteImport.update({
+  id: '/my-farm',
+  path: '/my-farm',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedMarketRoute = AuthenticatedMarketRouteImport.update({
   id: '/market',
   path: '/market',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedJournalRoute = AuthenticatedJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedJobsRoute = AuthenticatedJobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedIrrigationRoute = AuthenticatedIrrigationRouteImport.update({
+  id: '/irrigation',
+  path: '/irrigation',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
@@ -177,8 +195,11 @@ export interface FileRoutesByFullPath {
   '/earnings': typeof AuthenticatedEarningsRoute
   '/equipment': typeof AuthenticatedEquipmentRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/irrigation': typeof AuthenticatedIrrigationRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/journal': typeof AuthenticatedJournalRoute
   '/market': typeof AuthenticatedMarketRoute
+  '/my-farm': typeof AuthenticatedMyFarmRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/services': typeof AuthenticatedServicesRoute
@@ -203,8 +224,11 @@ export interface FileRoutesByTo {
   '/earnings': typeof AuthenticatedEarningsRoute
   '/equipment': typeof AuthenticatedEquipmentRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/irrigation': typeof AuthenticatedIrrigationRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/journal': typeof AuthenticatedJournalRoute
   '/market': typeof AuthenticatedMarketRoute
+  '/my-farm': typeof AuthenticatedMyFarmRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/services': typeof AuthenticatedServicesRoute
@@ -231,8 +255,11 @@ export interface FileRoutesById {
   '/_authenticated/earnings': typeof AuthenticatedEarningsRoute
   '/_authenticated/equipment': typeof AuthenticatedEquipmentRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_authenticated/irrigation': typeof AuthenticatedIrrigationRoute
   '/_authenticated/jobs': typeof AuthenticatedJobsRoute
+  '/_authenticated/journal': typeof AuthenticatedJournalRoute
   '/_authenticated/market': typeof AuthenticatedMarketRoute
+  '/_authenticated/my-farm': typeof AuthenticatedMyFarmRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/services': typeof AuthenticatedServicesRoute
@@ -259,8 +286,11 @@ export interface FileRouteTypes {
     | '/earnings'
     | '/equipment'
     | '/history'
+    | '/irrigation'
     | '/jobs'
+    | '/journal'
     | '/market'
+    | '/my-farm'
     | '/orders'
     | '/profile'
     | '/services'
@@ -285,8 +315,11 @@ export interface FileRouteTypes {
     | '/earnings'
     | '/equipment'
     | '/history'
+    | '/irrigation'
     | '/jobs'
+    | '/journal'
     | '/market'
+    | '/my-farm'
     | '/orders'
     | '/profile'
     | '/services'
@@ -312,8 +345,11 @@ export interface FileRouteTypes {
     | '/_authenticated/earnings'
     | '/_authenticated/equipment'
     | '/_authenticated/history'
+    | '/_authenticated/irrigation'
     | '/_authenticated/jobs'
+    | '/_authenticated/journal'
     | '/_authenticated/market'
+    | '/_authenticated/my-farm'
     | '/_authenticated/orders'
     | '/_authenticated/profile'
     | '/_authenticated/services'
@@ -459,6 +495,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrdersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/my-farm': {
+      id: '/_authenticated/my-farm'
+      path: '/my-farm'
+      fullPath: '/my-farm'
+      preLoaderRoute: typeof AuthenticatedMyFarmRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/market': {
       id: '/_authenticated/market'
       path: '/market'
@@ -466,11 +509,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMarketRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/journal': {
+      id: '/_authenticated/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof AuthenticatedJournalRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/jobs': {
       id: '/_authenticated/jobs'
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof AuthenticatedJobsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/irrigation': {
+      id: '/_authenticated/irrigation'
+      path: '/irrigation'
+      fullPath: '/irrigation'
+      preLoaderRoute: typeof AuthenticatedIrrigationRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/history': {
@@ -524,8 +581,11 @@ interface AuthenticatedRouteChildren {
   AuthenticatedEarningsRoute: typeof AuthenticatedEarningsRoute
   AuthenticatedEquipmentRoute: typeof AuthenticatedEquipmentRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
+  AuthenticatedIrrigationRoute: typeof AuthenticatedIrrigationRoute
   AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
+  AuthenticatedJournalRoute: typeof AuthenticatedJournalRoute
   AuthenticatedMarketRoute: typeof AuthenticatedMarketRoute
+  AuthenticatedMyFarmRoute: typeof AuthenticatedMyFarmRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedServicesRoute: typeof AuthenticatedServicesRoute
@@ -539,8 +599,11 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedEarningsRoute: AuthenticatedEarningsRoute,
   AuthenticatedEquipmentRoute: AuthenticatedEquipmentRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
+  AuthenticatedIrrigationRoute: AuthenticatedIrrigationRoute,
   AuthenticatedJobsRoute: AuthenticatedJobsRoute,
+  AuthenticatedJournalRoute: AuthenticatedJournalRoute,
   AuthenticatedMarketRoute: AuthenticatedMarketRoute,
+  AuthenticatedMyFarmRoute: AuthenticatedMyFarmRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedServicesRoute: AuthenticatedServicesRoute,
