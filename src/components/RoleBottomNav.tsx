@@ -7,9 +7,9 @@ type Item = { to: string; label: string; icon: typeof Home };
 
 const FARMER: Item[] = [
   { to: "/dashboard", label: "Home", icon: Home },
-  { to: "/profile", label: "My Farm", icon: Leaf },
+  { to: "/my-farm", label: "My Farm", icon: Leaf },
   { to: "/market", label: "Market", icon: ShoppingCart },
-  { to: "/jobs", label: "Jobs", icon: Briefcase },
+  { to: "/stats", label: "Stats", icon: Briefcase },
   { to: "/profile", label: "Profile", icon: User },
 ];
 
