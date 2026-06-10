@@ -36,11 +36,12 @@ function VerifyPage() {
         .eq("completed", true)
         .maybeSingle();
       if (!data) return setResult({ ok: false });
+      const courseRel = data.course as { title?: string } | { title?: string }[] | null;
+      const courseTitle = Array.isArray(courseRel) ? courseRel[0]?.title : courseRel?.title;
       setResult({
         ok: true,
         name: (data.user_full_name as string | null) ?? "AgriMate Farmer",
-        // @ts-expect-error nested
-        courseTitle: data.course?.title ?? "Course",
+        courseTitle: courseTitle ?? "Course",
         completedAt: data.completed_at as string,
       });
     })();

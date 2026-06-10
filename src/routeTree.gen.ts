@@ -21,22 +21,27 @@ import { Route as CropDoctorRouteImport } from './routes/crop-doctor'
 import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VerifyCodeRouteImport } from './routes/verify.$code'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedStatsRouteImport } from './routes/_authenticated/stats'
 import { Route as AuthenticatedServicesRouteImport } from './routes/_authenticated/services'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedMyFarmRouteImport } from './routes/_authenticated/my-farm'
 import { Route as AuthenticatedMarketRouteImport } from './routes/_authenticated/market'
+import { Route as AuthenticatedLearnRouteImport } from './routes/_authenticated/learn'
 import { Route as AuthenticatedJournalRouteImport } from './routes/_authenticated/journal'
 import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
 import { Route as AuthenticatedIrrigationRouteImport } from './routes/_authenticated/irrigation'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
+import { Route as AuthenticatedGrantsRouteImport } from './routes/_authenticated/grants'
 import { Route as AuthenticatedEquipmentRouteImport } from './routes/_authenticated/equipment'
 import { Route as AuthenticatedEarningsRouteImport } from './routes/_authenticated/earnings'
 import { Route as AuthenticatedBrowseRouteImport } from './routes/_authenticated/browse'
 import { Route as AuthenticatedBookingsRouteImport } from './routes/_authenticated/bookings'
 import { Route as ApiPayfastNotifyRouteImport } from './routes/api/payfast/notify'
+import { Route as AuthenticatedLearnCourseIdRouteImport } from './routes/_authenticated/learn.$courseId'
 
 const WeatherRoute = WeatherRouteImport.update({
   id: '/weather',
@@ -97,6 +102,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyCodeRoute = VerifyCodeRouteImport.update({
+  id: '/verify/$code',
+  path: '/verify/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -122,6 +132,12 @@ const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedNotificationsRoute =
+  AuthenticatedNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedMyFarmRoute = AuthenticatedMyFarmRouteImport.update({
   id: '/my-farm',
   path: '/my-farm',
@@ -130,6 +146,11 @@ const AuthenticatedMyFarmRoute = AuthenticatedMyFarmRouteImport.update({
 const AuthenticatedMarketRoute = AuthenticatedMarketRouteImport.update({
   id: '/market',
   path: '/market',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedLearnRoute = AuthenticatedLearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedJournalRoute = AuthenticatedJournalRouteImport.update({
@@ -150,6 +171,11 @@ const AuthenticatedIrrigationRoute = AuthenticatedIrrigationRouteImport.update({
 const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedGrantsRoute = AuthenticatedGrantsRouteImport.update({
+  id: '/grants',
+  path: '/grants',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedEquipmentRoute = AuthenticatedEquipmentRouteImport.update({
@@ -177,6 +203,12 @@ const ApiPayfastNotifyRoute = ApiPayfastNotifyRouteImport.update({
   path: '/api/payfast/notify',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedLearnCourseIdRoute =
+  AuthenticatedLearnCourseIdRouteImport.update({
+    id: '/$courseId',
+    path: '/$courseId',
+    getParentRoute: () => AuthenticatedLearnRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -194,17 +226,22 @@ export interface FileRoutesByFullPath {
   '/browse': typeof AuthenticatedBrowseRoute
   '/earnings': typeof AuthenticatedEarningsRoute
   '/equipment': typeof AuthenticatedEquipmentRoute
+  '/grants': typeof AuthenticatedGrantsRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/irrigation': typeof AuthenticatedIrrigationRoute
   '/jobs': typeof AuthenticatedJobsRoute
   '/journal': typeof AuthenticatedJournalRoute
+  '/learn': typeof AuthenticatedLearnRouteWithChildren
   '/market': typeof AuthenticatedMarketRoute
   '/my-farm': typeof AuthenticatedMyFarmRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/services': typeof AuthenticatedServicesRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/verify/$code': typeof VerifyCodeRoute
+  '/learn/$courseId': typeof AuthenticatedLearnCourseIdRoute
   '/api/payfast/notify': typeof ApiPayfastNotifyRoute
 }
 export interface FileRoutesByTo {
@@ -223,17 +260,22 @@ export interface FileRoutesByTo {
   '/browse': typeof AuthenticatedBrowseRoute
   '/earnings': typeof AuthenticatedEarningsRoute
   '/equipment': typeof AuthenticatedEquipmentRoute
+  '/grants': typeof AuthenticatedGrantsRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/irrigation': typeof AuthenticatedIrrigationRoute
   '/jobs': typeof AuthenticatedJobsRoute
   '/journal': typeof AuthenticatedJournalRoute
+  '/learn': typeof AuthenticatedLearnRouteWithChildren
   '/market': typeof AuthenticatedMarketRoute
   '/my-farm': typeof AuthenticatedMyFarmRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/services': typeof AuthenticatedServicesRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/verify/$code': typeof VerifyCodeRoute
+  '/learn/$courseId': typeof AuthenticatedLearnCourseIdRoute
   '/api/payfast/notify': typeof ApiPayfastNotifyRoute
 }
 export interface FileRoutesById {
@@ -254,17 +296,22 @@ export interface FileRoutesById {
   '/_authenticated/browse': typeof AuthenticatedBrowseRoute
   '/_authenticated/earnings': typeof AuthenticatedEarningsRoute
   '/_authenticated/equipment': typeof AuthenticatedEquipmentRoute
+  '/_authenticated/grants': typeof AuthenticatedGrantsRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/irrigation': typeof AuthenticatedIrrigationRoute
   '/_authenticated/jobs': typeof AuthenticatedJobsRoute
   '/_authenticated/journal': typeof AuthenticatedJournalRoute
+  '/_authenticated/learn': typeof AuthenticatedLearnRouteWithChildren
   '/_authenticated/market': typeof AuthenticatedMarketRoute
   '/_authenticated/my-farm': typeof AuthenticatedMyFarmRoute
+  '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/services': typeof AuthenticatedServicesRoute
   '/_authenticated/stats': typeof AuthenticatedStatsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
+  '/verify/$code': typeof VerifyCodeRoute
+  '/_authenticated/learn/$courseId': typeof AuthenticatedLearnCourseIdRoute
   '/api/payfast/notify': typeof ApiPayfastNotifyRoute
 }
 export interface FileRouteTypes {
@@ -285,17 +332,22 @@ export interface FileRouteTypes {
     | '/browse'
     | '/earnings'
     | '/equipment'
+    | '/grants'
     | '/history'
     | '/irrigation'
     | '/jobs'
     | '/journal'
+    | '/learn'
     | '/market'
     | '/my-farm'
+    | '/notifications'
     | '/orders'
     | '/profile'
     | '/services'
     | '/stats'
     | '/tasks'
+    | '/verify/$code'
+    | '/learn/$courseId'
     | '/api/payfast/notify'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -314,17 +366,22 @@ export interface FileRouteTypes {
     | '/browse'
     | '/earnings'
     | '/equipment'
+    | '/grants'
     | '/history'
     | '/irrigation'
     | '/jobs'
     | '/journal'
+    | '/learn'
     | '/market'
     | '/my-farm'
+    | '/notifications'
     | '/orders'
     | '/profile'
     | '/services'
     | '/stats'
     | '/tasks'
+    | '/verify/$code'
+    | '/learn/$courseId'
     | '/api/payfast/notify'
   id:
     | '__root__'
@@ -344,17 +401,22 @@ export interface FileRouteTypes {
     | '/_authenticated/browse'
     | '/_authenticated/earnings'
     | '/_authenticated/equipment'
+    | '/_authenticated/grants'
     | '/_authenticated/history'
     | '/_authenticated/irrigation'
     | '/_authenticated/jobs'
     | '/_authenticated/journal'
+    | '/_authenticated/learn'
     | '/_authenticated/market'
     | '/_authenticated/my-farm'
+    | '/_authenticated/notifications'
     | '/_authenticated/orders'
     | '/_authenticated/profile'
     | '/_authenticated/services'
     | '/_authenticated/stats'
     | '/_authenticated/tasks'
+    | '/verify/$code'
+    | '/_authenticated/learn/$courseId'
     | '/api/payfast/notify'
   fileRoutesById: FileRoutesById
 }
@@ -371,6 +433,7 @@ export interface RootRouteChildren {
   TipsRoute: typeof TipsRoute
   UpgradeRoute: typeof UpgradeRoute
   WeatherRoute: typeof WeatherRoute
+  VerifyCodeRoute: typeof VerifyCodeRoute
   ApiPayfastNotifyRoute: typeof ApiPayfastNotifyRoute
 }
 
@@ -460,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify/$code': {
+      id: '/verify/$code'
+      path: '/verify/$code'
+      fullPath: '/verify/$code'
+      preLoaderRoute: typeof VerifyCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/tasks': {
       id: '/_authenticated/tasks'
       path: '/tasks'
@@ -495,6 +565,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrdersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/my-farm': {
       id: '/_authenticated/my-farm'
       path: '/my-farm'
@@ -507,6 +584,13 @@ declare module '@tanstack/react-router' {
       path: '/market'
       fullPath: '/market'
       preLoaderRoute: typeof AuthenticatedMarketRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/learn': {
+      id: '/_authenticated/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof AuthenticatedLearnRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/journal': {
@@ -535,6 +619,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof AuthenticatedHistoryRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/grants': {
+      id: '/_authenticated/grants'
+      path: '/grants'
+      fullPath: '/grants'
+      preLoaderRoute: typeof AuthenticatedGrantsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/equipment': {
@@ -572,20 +663,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPayfastNotifyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/learn/$courseId': {
+      id: '/_authenticated/learn/$courseId'
+      path: '/$courseId'
+      fullPath: '/learn/$courseId'
+      preLoaderRoute: typeof AuthenticatedLearnCourseIdRouteImport
+      parentRoute: typeof AuthenticatedLearnRoute
+    }
   }
 }
+
+interface AuthenticatedLearnRouteChildren {
+  AuthenticatedLearnCourseIdRoute: typeof AuthenticatedLearnCourseIdRoute
+}
+
+const AuthenticatedLearnRouteChildren: AuthenticatedLearnRouteChildren = {
+  AuthenticatedLearnCourseIdRoute: AuthenticatedLearnCourseIdRoute,
+}
+
+const AuthenticatedLearnRouteWithChildren =
+  AuthenticatedLearnRoute._addFileChildren(AuthenticatedLearnRouteChildren)
 
 interface AuthenticatedRouteChildren {
   AuthenticatedBookingsRoute: typeof AuthenticatedBookingsRoute
   AuthenticatedBrowseRoute: typeof AuthenticatedBrowseRoute
   AuthenticatedEarningsRoute: typeof AuthenticatedEarningsRoute
   AuthenticatedEquipmentRoute: typeof AuthenticatedEquipmentRoute
+  AuthenticatedGrantsRoute: typeof AuthenticatedGrantsRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedIrrigationRoute: typeof AuthenticatedIrrigationRoute
   AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
   AuthenticatedJournalRoute: typeof AuthenticatedJournalRoute
+  AuthenticatedLearnRoute: typeof AuthenticatedLearnRouteWithChildren
   AuthenticatedMarketRoute: typeof AuthenticatedMarketRoute
   AuthenticatedMyFarmRoute: typeof AuthenticatedMyFarmRoute
+  AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedServicesRoute: typeof AuthenticatedServicesRoute
@@ -598,12 +710,15 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBrowseRoute: AuthenticatedBrowseRoute,
   AuthenticatedEarningsRoute: AuthenticatedEarningsRoute,
   AuthenticatedEquipmentRoute: AuthenticatedEquipmentRoute,
+  AuthenticatedGrantsRoute: AuthenticatedGrantsRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedIrrigationRoute: AuthenticatedIrrigationRoute,
   AuthenticatedJobsRoute: AuthenticatedJobsRoute,
   AuthenticatedJournalRoute: AuthenticatedJournalRoute,
+  AuthenticatedLearnRoute: AuthenticatedLearnRouteWithChildren,
   AuthenticatedMarketRoute: AuthenticatedMarketRoute,
   AuthenticatedMyFarmRoute: AuthenticatedMyFarmRoute,
+  AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedServicesRoute: AuthenticatedServicesRoute,
@@ -628,6 +743,7 @@ const rootRouteChildren: RootRouteChildren = {
   TipsRoute: TipsRoute,
   UpgradeRoute: UpgradeRoute,
   WeatherRoute: WeatherRoute,
+  VerifyCodeRoute: VerifyCodeRoute,
   ApiPayfastNotifyRoute: ApiPayfastNotifyRoute,
 }
 export const routeTree = rootRouteImport
