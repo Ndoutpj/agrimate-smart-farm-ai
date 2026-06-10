@@ -62,6 +62,89 @@ export type Database = {
         }
         Relationships: []
       }
+      course_progress: {
+        Row: {
+          certificate_code: string | null
+          completed: boolean
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          id: string
+          progress: number
+          updated_at: string
+          user_full_name: string | null
+          user_id: string
+        }
+        Insert: {
+          certificate_code?: string | null
+          completed?: boolean
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          progress?: number
+          updated_at?: string
+          user_full_name?: string | null
+          user_id: string
+        }
+        Update: {
+          certificate_code?: string | null
+          completed?: boolean
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          progress?: number
+          updated_at?: string
+          user_full_name?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_progress_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_published: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       diagnosis_usage: {
         Row: {
           count: number
@@ -250,6 +333,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      grants: {
+        Row: {
+          amount_zar: number | null
+          created_at: string
+          crops: string[] | null
+          deadline: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          max_size_ha: number | null
+          min_size_ha: number | null
+          provider: string | null
+          province: string | null
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          amount_zar?: number | null
+          created_at?: string
+          crops?: string[] | null
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          max_size_ha?: number | null
+          min_size_ha?: number | null
+          provider?: string | null
+          province?: string | null
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          amount_zar?: number | null
+          created_at?: string
+          crops?: string[] | null
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          max_size_ha?: number | null
+          min_size_ha?: number | null
+          provider?: string | null
+          province?: string | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
       }
       irrigation_schedule: {
         Row: {
@@ -461,6 +595,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       orders: {
         Row: {

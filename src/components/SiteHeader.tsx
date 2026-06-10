@@ -6,8 +6,9 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, LogOut, User, ListChecks, LayoutDashboard } from "lucide-react";
+import { Menu, LogOut, User, ListChecks, LayoutDashboard, GraduationCap, Banknote } from "lucide-react";
 import { useAuth, initials } from "@/lib/auth";
+import { NotificationBell } from "./NotificationBell";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard" },
@@ -46,6 +47,7 @@ export function SiteHeader() {
           </nav>
         )}
         <div className="flex items-center gap-2">
+          {user && <NotificationBell />}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -64,6 +66,12 @@ export function SiteHeader() {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/tasks" })}>
                   <ListChecks className="mr-2 h-4 w-4" /> Tasks
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/learn" })}>
+                  <GraduationCap className="mr-2 h-4 w-4" /> Courses
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/grants" })}>
+                  <Banknote className="mr-2 h-4 w-4" /> Grants
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
@@ -95,6 +103,9 @@ export function SiteHeader() {
                   ))}
                   <Link to="/profile" className="rounded-lg px-3 py-2 text-sm hover:bg-muted">My Farm</Link>
                   <Link to="/tasks" className="rounded-lg px-3 py-2 text-sm hover:bg-muted">Tasks</Link>
+                  <Link to="/learn" className="rounded-lg px-3 py-2 text-sm hover:bg-muted">Courses</Link>
+                  <Link to="/grants" className="rounded-lg px-3 py-2 text-sm hover:bg-muted">Grants</Link>
+                  <Link to="/notifications" className="rounded-lg px-3 py-2 text-sm hover:bg-muted">Notifications</Link>
                   <Button variant="outline" className="mt-3 w-full" onClick={handleSignOut}>Sign out</Button>
                 </div>
               </SheetContent>
