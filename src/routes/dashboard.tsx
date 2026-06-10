@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sprout, Droplets, CloudSun, Bug, MessageCircle, Calculator, TrendingUp, Leaf, Wrench, Briefcase, BookOpen, BarChart3 } from "lucide-react";
+import { Sprout, Droplets, CloudSun, Bug, MessageCircle, Calculator, TrendingUp, Leaf, Wrench, Briefcase, BookOpen, BarChart3, GraduationCap, Banknote } from "lucide-react";
 import {
   Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid,
   Bar, BarChart,
@@ -151,7 +151,7 @@ function Dashboard() {
           </Card></Link>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Link to="/equipment"><Card className="tilt-card group p-5">
             <Wrench className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
             <h3 className="font-semibold">Equipment & Services</h3>
@@ -161,6 +161,16 @@ function Dashboard() {
             <Briefcase className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
             <h3 className="font-semibold">Jobs Board</h3>
             <p className="text-sm text-muted-foreground">Hire workers or find farm work.</p>
+          </Card></Link>
+          <Link to={"/learn" as never}><Card className="tilt-card group p-5">
+            <GraduationCap className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">Courses & Certificates</h3>
+            <p className="text-sm text-muted-foreground">Learn & earn verified certificates.</p>
+          </Card></Link>
+          <Link to={"/grants" as never}><Card className="tilt-card group p-5">
+            <Banknote className="mb-2 h-6 w-6 text-primary transition group-hover:scale-110" />
+            <h3 className="font-semibold">Grants & Subsidies</h3>
+            <p className="text-sm text-muted-foreground">Funding opportunities.</p>
           </Card></Link>
         </div>
 
