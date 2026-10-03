@@ -23,15 +23,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s);
+    // If Supabase isn't configured (missing env vars), keep the app rendering
+    // as signed-out instead of crashing the whole page during hydration.
+    let sub: ReturnType<typeof supabase.auth.onAuthStateChange>["data"] | undefined;
+    try {
+      sub = supabase.auth.onAuthStateChange((_e, s) => {
+        setSession(s);
+        setLoading(false);
+      }).data;
+      supabase.auth
+        .getSession()
+        .then(({ data }) => {
+          setSession(data.session);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } catch (error) {
+      console.error(error);
       setLoading(false);
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
-    return () => sub.subscription.unsubscribe();
+    }
+    return () => sub?.subscription.unsubscribe();
   }, []);
 
   return (
