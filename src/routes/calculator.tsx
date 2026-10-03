@@ -6,9 +6,15 @@ export const Route = createFileRoute("/calculator")({
   head: () => ({
     meta: [
       { title: "Farm Calculator — AgriMate" },
-      { name: "description", content: "Estimate seed, water, labour, and profit for any crop and field size." },
+      {
+        name: "description",
+        content: "Estimate seed, water, labour, and profit for any crop and field size.",
+      },
       { property: "og:title", content: "Farm Calculator — AgriMate" },
-      { property: "og:description", content: "Smart planning calculator for African smallholders." },
+      {
+        property: "og:description",
+        content: "Smart planning calculator for African smallholders.",
+      },
     ],
   }),
   component: CalcPage,

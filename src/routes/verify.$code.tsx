@@ -11,7 +11,10 @@ export const Route = createFileRoute("/verify/$code")({
   head: ({ params }) => ({
     meta: [
       { title: `Verify certificate ${params.code} — AgriMate` },
-      { name: "description", content: "Verify the authenticity of an AgriMate course certificate." },
+      {
+        name: "description",
+        content: "Verify the authenticity of an AgriMate course certificate.",
+      },
     ],
   }),
 });
@@ -52,13 +55,17 @@ function VerifyPage() {
       <header className="border-b">
         <div className="mx-auto flex h-16 max-w-3xl items-center gap-2 px-4">
           <Logo />
-          <span className="text-lg font-semibold">Agri<span className="text-primary">Mate</span></span>
+          <span className="text-lg font-semibold">
+            Agri<span className="text-primary">Mate</span>
+          </span>
         </div>
       </header>
       <div className="mx-auto max-w-xl px-4 py-12 animate-fade-up">
         <Card className="p-8 text-center">
           {!result ? (
-            <div className="flex items-center justify-center text-muted-foreground"><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Verifying…</div>
+            <div className="flex items-center justify-center text-muted-foreground">
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Verifying…
+            </div>
           ) : result.ok ? (
             <>
               <div className="mx-auto mb-3 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -83,7 +90,8 @@ function VerifyPage() {
               </div>
               <h1 className="text-2xl font-bold">Not found</h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                No valid AgriMate certificate matches code <span className="font-mono">{code}</span>.
+                No valid AgriMate certificate matches code <span className="font-mono">{code}</span>
+                .
               </p>
             </>
           )}

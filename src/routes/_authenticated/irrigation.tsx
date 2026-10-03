@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Loader2, Droplets, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -36,13 +42,24 @@ function IrrigationPage() {
   const [crops, setCrops] = useState<CropOpt[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ crop_id: "none", day_of_week: "1", time_of_day: "06:00", duration_minutes: "30", method: "drip" });
+  const [form, setForm] = useState({
+    crop_id: "none",
+    day_of_week: "1",
+    time_of_day: "06:00",
+    duration_minutes: "30",
+    method: "drip",
+  });
 
   const load = async () => {
     if (!user) return;
     setLoading(true);
     const [{ data: i }, { data: c }] = await Promise.all([
-      supabase.from("irrigation_schedule").select("*").eq("user_id", user.id).order("day_of_week").order("time_of_day"),
+      supabase
+        .from("irrigation_schedule")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("day_of_week")
+        .order("time_of_day"),
       supabase.from("farm_crops").select("id, crop").eq("user_id", user.id).order("crop"),
     ]);
     setItems((i as Item[]) ?? []);
@@ -50,7 +67,9 @@ function IrrigationPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [user?.id]);
+  useEffect(() => {
+    load(); /* eslint-disable-next-line */
+  }, [user?.id]);
 
   const save = async () => {
     if (!user) return;
@@ -86,7 +105,9 @@ function IrrigationPage() {
       <div className="mx-auto max-w-3xl space-y-6 px-4 py-8 animate-fade-up">
         <div>
           <h1 className="text-2xl font-bold md:text-3xl">Irrigation Scheduler</h1>
-          <p className="text-sm text-muted-foreground">Plan watering times by day of week to save water and stay consistent.</p>
+          <p className="text-sm text-muted-foreground">
+            Plan watering times by day of week to save water and stay consistent.
+          </p>
         </div>
 
         <Card className="space-y-3 p-4">
@@ -94,34 +115,60 @@ function IrrigationPage() {
             <div className="grid gap-1.5">
               <Label>Crop</Label>
               <Select value={form.crop_id} onValueChange={(v) => setForm({ ...form, crop_id: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">All crops</SelectItem>
-                  {crops.map((c) => <SelectItem key={c.id} value={c.id}>{c.crop}</SelectItem>)}
+                  {crops.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.crop}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-1.5">
               <Label>Day</Label>
-              <Select value={form.day_of_week} onValueChange={(v) => setForm({ ...form, day_of_week: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <Select
+                value={form.day_of_week}
+                onValueChange={(v) => setForm({ ...form, day_of_week: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
-                  {DAYS.map((d, i) => <SelectItem key={d} value={String(i)}>{d}</SelectItem>)}
+                  {DAYS.map((d, i) => (
+                    <SelectItem key={d} value={String(i)}>
+                      {d}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-1.5">
               <Label>Time</Label>
-              <Input type="time" value={form.time_of_day} onChange={(e) => setForm({ ...form, time_of_day: e.target.value })} />
+              <Input
+                type="time"
+                value={form.time_of_day}
+                onChange={(e) => setForm({ ...form, time_of_day: e.target.value })}
+              />
             </div>
             <div className="grid gap-1.5">
               <Label>Duration (min)</Label>
-              <Input type="number" min={1} value={form.duration_minutes} onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })} />
+              <Input
+                type="number"
+                min={1}
+                value={form.duration_minutes}
+                onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })}
+              />
             </div>
             <div className="col-span-2 grid gap-1.5">
               <Label>Method</Label>
               <Select value={form.method} onValueChange={(v) => setForm({ ...form, method: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="drip">Drip</SelectItem>
                   <SelectItem value="sprinkler">Sprinkler</SelectItem>
@@ -132,13 +179,19 @@ function IrrigationPage() {
             </div>
           </div>
           <Button onClick={save} disabled={saving} className="w-full min-h-12">
-            {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+            {saving ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Plus className="mr-2 h-4 w-4" />
+            )}
             Add schedule
           </Button>
         </Card>
 
         {loading ? (
-          <div className="flex items-center text-muted-foreground"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading…</div>
+          <div className="flex items-center text-muted-foreground">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading…
+          </div>
         ) : items.length === 0 ? (
           <Card className="flex flex-col items-center gap-3 p-10 text-center">
             <Droplets className="h-10 w-10 text-primary" />
@@ -150,11 +203,21 @@ function IrrigationPage() {
             {items.map((it) => (
               <Card key={it.id} className="flex items-center justify-between gap-3 p-4">
                 <div className="min-w-0 flex-1">
-                  <div className="font-semibold">{DAYS[it.day_of_week]} · {it.time_of_day.slice(0, 5)} · {it.duration_minutes} min</div>
-                  <div className="text-xs text-muted-foreground">{cropName(it.crop_id)} · {it.method ?? "—"}</div>
+                  <div className="font-semibold">
+                    {DAYS[it.day_of_week]} · {it.time_of_day.slice(0, 5)} · {it.duration_minutes}{" "}
+                    min
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {cropName(it.crop_id)} · {it.method ?? "—"}
+                  </div>
                 </div>
                 <Switch checked={it.enabled} onCheckedChange={(v) => toggle(it.id, v)} />
-                <Button size="icon" variant="ghost" onClick={() => remove(it.id)} aria-label="Delete">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => remove(it.id)}
+                  aria-label="Delete"
+                >
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
               </Card>

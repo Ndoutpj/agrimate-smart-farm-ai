@@ -30,7 +30,10 @@ function SuccessPage() {
     if (!isPremium) return;
     const t = setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
     const r = setTimeout(() => navigate({ to: "/dashboard" }), 5000);
-    return () => { clearInterval(t); clearTimeout(r); };
+    return () => {
+      clearInterval(t);
+      clearTimeout(r);
+    };
   }, [isPremium, navigate]);
 
   return (

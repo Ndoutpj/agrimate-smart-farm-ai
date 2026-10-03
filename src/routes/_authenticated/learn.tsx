@@ -31,14 +31,23 @@ function LearnPage() {
   useEffect(() => {
     (async () => {
       const [{ data: c }, { data: p }] = await Promise.all([
-        supabase.from("courses").select("id,title,description,category,duration_minutes").eq("is_published", true).order("created_at"),
+        supabase
+          .from("courses")
+          .select("id,title,description,category,duration_minutes")
+          .eq("is_published", true)
+          .order("created_at"),
         user
-          ? supabase.from("course_progress").select("course_id,completed,progress").eq("user_id", user.id)
+          ? supabase
+              .from("course_progress")
+              .select("course_id,completed,progress")
+              .eq("user_id", user.id)
           : Promise.resolve({ data: [] as Progress[] }),
       ]);
       setCourses((c ?? []) as Course[]);
       const map: Record<string, Progress> = {};
-      (p ?? []).forEach((r: any) => { map[r.course_id] = r; });
+      (p ?? []).forEach((r: Progress) => {
+        map[r.course_id] = r;
+      });
       setProgress(map);
       setLoading(false);
     })();
@@ -51,16 +60,24 @@ function LearnPage() {
       <SiteHeader />
       <div className="mx-auto max-w-5xl space-y-6 px-4 py-8 animate-fade-up">
         <div className="flex items-start gap-4">
-          <div className="rounded-2xl bg-primary/10 p-3 text-primary"><GraduationCap className="h-6 w-6" /></div>
+          <div className="rounded-2xl bg-primary/10 p-3 text-primary">
+            <GraduationCap className="h-6 w-6" />
+          </div>
           <div className="flex-1">
             <h1 className="text-2xl font-bold">Courses & Certificates</h1>
-            <p className="text-sm text-muted-foreground">Learn modern farming, earn shareable certificates with a QR verify code.</p>
+            <p className="text-sm text-muted-foreground">
+              Learn modern farming, earn shareable certificates with a QR verify code.
+            </p>
           </div>
-          <Badge variant="secondary" className="shrink-0">{completedCount} earned</Badge>
+          <Badge variant="secondary" className="shrink-0">
+            {completedCount} earned
+          </Badge>
         </div>
 
         {loading ? (
-          <div className="flex items-center text-muted-foreground"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading courses…</div>
+          <div className="flex items-center text-muted-foreground">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading courses…
+          </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {courses.map((c) => {
@@ -77,7 +94,9 @@ function LearnPage() {
                       )}
                     </div>
                     <h3 className="text-lg font-semibold">{c.title}</h3>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{c.description}</p>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                      {c.description}
+                    </p>
                     <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock className="h-3.5 w-3.5" /> {c.duration_minutes ?? 15} min
                     </div>

@@ -1,1062 +1,1054 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
+    PostgrestVersion: "14.5";
+  };
   public: {
     Tables: {
       bookings: {
         Row: {
-          contact_phone: string | null
-          created_at: string
-          end_date: string | null
-          farmer_id: string
-          hours: number | null
-          id: string
-          notes: string | null
-          provider_id: string
-          service_id: string
-          start_date: string
-          status: string
-          total_price: number
-          updated_at: string
-        }
+          contact_phone: string | null;
+          created_at: string;
+          end_date: string | null;
+          farmer_id: string;
+          hours: number | null;
+          id: string;
+          notes: string | null;
+          provider_id: string;
+          service_id: string;
+          start_date: string;
+          status: string;
+          total_price: number;
+          updated_at: string;
+        };
         Insert: {
-          contact_phone?: string | null
-          created_at?: string
-          end_date?: string | null
-          farmer_id: string
-          hours?: number | null
-          id?: string
-          notes?: string | null
-          provider_id: string
-          service_id: string
-          start_date: string
-          status?: string
-          total_price: number
-          updated_at?: string
-        }
+          contact_phone?: string | null;
+          created_at?: string;
+          end_date?: string | null;
+          farmer_id: string;
+          hours?: number | null;
+          id?: string;
+          notes?: string | null;
+          provider_id: string;
+          service_id: string;
+          start_date: string;
+          status?: string;
+          total_price: number;
+          updated_at?: string;
+        };
         Update: {
-          contact_phone?: string | null
-          created_at?: string
-          end_date?: string | null
-          farmer_id?: string
-          hours?: number | null
-          id?: string
-          notes?: string | null
-          provider_id?: string
-          service_id?: string
-          start_date?: string
-          status?: string
-          total_price?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          contact_phone?: string | null;
+          created_at?: string;
+          end_date?: string | null;
+          farmer_id?: string;
+          hours?: number | null;
+          id?: string;
+          notes?: string | null;
+          provider_id?: string;
+          service_id?: string;
+          start_date?: string;
+          status?: string;
+          total_price?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       course_progress: {
         Row: {
-          certificate_code: string | null
-          completed: boolean
-          completed_at: string | null
-          course_id: string
-          created_at: string
-          id: string
-          progress: number
-          updated_at: string
-          user_full_name: string | null
-          user_id: string
-        }
+          certificate_code: string | null;
+          completed: boolean;
+          completed_at: string | null;
+          course_id: string;
+          created_at: string;
+          id: string;
+          progress: number;
+          updated_at: string;
+          user_full_name: string | null;
+          user_id: string;
+        };
         Insert: {
-          certificate_code?: string | null
-          completed?: boolean
-          completed_at?: string | null
-          course_id: string
-          created_at?: string
-          id?: string
-          progress?: number
-          updated_at?: string
-          user_full_name?: string | null
-          user_id: string
-        }
+          certificate_code?: string | null;
+          completed?: boolean;
+          completed_at?: string | null;
+          course_id: string;
+          created_at?: string;
+          id?: string;
+          progress?: number;
+          updated_at?: string;
+          user_full_name?: string | null;
+          user_id: string;
+        };
         Update: {
-          certificate_code?: string | null
-          completed?: boolean
-          completed_at?: string | null
-          course_id?: string
-          created_at?: string
-          id?: string
-          progress?: number
-          updated_at?: string
-          user_full_name?: string | null
-          user_id?: string
-        }
+          certificate_code?: string | null;
+          completed?: boolean;
+          completed_at?: string | null;
+          course_id?: string;
+          created_at?: string;
+          id?: string;
+          progress?: number;
+          updated_at?: string;
+          user_full_name?: string | null;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "course_progress_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
+            foreignKeyName: "course_progress_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "courses";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       courses: {
         Row: {
-          category: string | null
-          content: string | null
-          created_at: string
-          description: string | null
-          duration_minutes: number | null
-          id: string
-          is_published: boolean
-          title: string
-          updated_at: string
-        }
+          category: string | null;
+          content: string | null;
+          created_at: string;
+          description: string | null;
+          duration_minutes: number | null;
+          id: string;
+          is_published: boolean;
+          title: string;
+          updated_at: string;
+        };
         Insert: {
-          category?: string | null
-          content?: string | null
-          created_at?: string
-          description?: string | null
-          duration_minutes?: number | null
-          id?: string
-          is_published?: boolean
-          title: string
-          updated_at?: string
-        }
+          category?: string | null;
+          content?: string | null;
+          created_at?: string;
+          description?: string | null;
+          duration_minutes?: number | null;
+          id?: string;
+          is_published?: boolean;
+          title: string;
+          updated_at?: string;
+        };
         Update: {
-          category?: string | null
-          content?: string | null
-          created_at?: string
-          description?: string | null
-          duration_minutes?: number | null
-          id?: string
-          is_published?: boolean
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          category?: string | null;
+          content?: string | null;
+          created_at?: string;
+          description?: string | null;
+          duration_minutes?: number | null;
+          id?: string;
+          is_published?: boolean;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       diagnosis_usage: {
         Row: {
-          count: number
-          id: string
-          updated_at: string
-          used_on: string
-          user_id: string
-        }
+          count: number;
+          id: string;
+          updated_at: string;
+          used_on: string;
+          user_id: string;
+        };
         Insert: {
-          count?: number
-          id?: string
-          updated_at?: string
-          used_on?: string
-          user_id: string
-        }
+          count?: number;
+          id?: string;
+          updated_at?: string;
+          used_on?: string;
+          user_id: string;
+        };
         Update: {
-          count?: number
-          id?: string
-          updated_at?: string
-          used_on?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+          count?: number;
+          id?: string;
+          updated_at?: string;
+          used_on?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       farm_crops: {
         Row: {
-          created_at: string
-          crop: string
-          expected_harvest_date: string | null
-          field_name: string | null
-          hectares: number
-          id: string
-          notes: string | null
-          planting_date: string | null
-          status: string
-          updated_at: string
-          user_id: string
-        }
+          created_at: string;
+          crop: string;
+          expected_harvest_date: string | null;
+          field_name: string | null;
+          hectares: number;
+          id: string;
+          notes: string | null;
+          planting_date: string | null;
+          status: string;
+          updated_at: string;
+          user_id: string;
+        };
         Insert: {
-          created_at?: string
-          crop: string
-          expected_harvest_date?: string | null
-          field_name?: string | null
-          hectares?: number
-          id?: string
-          notes?: string | null
-          planting_date?: string | null
-          status?: string
-          updated_at?: string
-          user_id: string
-        }
+          created_at?: string;
+          crop: string;
+          expected_harvest_date?: string | null;
+          field_name?: string | null;
+          hectares?: number;
+          id?: string;
+          notes?: string | null;
+          planting_date?: string | null;
+          status?: string;
+          updated_at?: string;
+          user_id: string;
+        };
         Update: {
-          created_at?: string
-          crop?: string
-          expected_harvest_date?: string | null
-          field_name?: string | null
-          hectares?: number
-          id?: string
-          notes?: string | null
-          planting_date?: string | null
-          status?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          crop?: string;
+          expected_harvest_date?: string | null;
+          field_name?: string | null;
+          hectares?: number;
+          id?: string;
+          notes?: string | null;
+          planting_date?: string | null;
+          status?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       farm_expenses: {
         Row: {
-          amount_zar: number
-          category: string
-          created_at: string
-          crop_id: string | null
-          id: string
-          note: string | null
-          spent_on: string
-          user_id: string
-        }
+          amount_zar: number;
+          category: string;
+          created_at: string;
+          crop_id: string | null;
+          id: string;
+          note: string | null;
+          spent_on: string;
+          user_id: string;
+        };
         Insert: {
-          amount_zar: number
-          category: string
-          created_at?: string
-          crop_id?: string | null
-          id?: string
-          note?: string | null
-          spent_on?: string
-          user_id: string
-        }
+          amount_zar: number;
+          category: string;
+          created_at?: string;
+          crop_id?: string | null;
+          id?: string;
+          note?: string | null;
+          spent_on?: string;
+          user_id: string;
+        };
         Update: {
-          amount_zar?: number
-          category?: string
-          created_at?: string
-          crop_id?: string | null
-          id?: string
-          note?: string | null
-          spent_on?: string
-          user_id?: string
-        }
+          amount_zar?: number;
+          category?: string;
+          created_at?: string;
+          crop_id?: string | null;
+          id?: string;
+          note?: string | null;
+          spent_on?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "farm_expenses_crop_id_fkey"
-            columns: ["crop_id"]
-            isOneToOne: false
-            referencedRelation: "farm_crops"
-            referencedColumns: ["id"]
+            foreignKeyName: "farm_expenses_crop_id_fkey";
+            columns: ["crop_id"];
+            isOneToOne: false;
+            referencedRelation: "farm_crops";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       farm_journal_entries: {
         Row: {
-          body: string | null
-          created_at: string
-          crop_id: string | null
-          entry_date: string
-          id: string
-          title: string
-          user_id: string
-        }
+          body: string | null;
+          created_at: string;
+          crop_id: string | null;
+          entry_date: string;
+          id: string;
+          title: string;
+          user_id: string;
+        };
         Insert: {
-          body?: string | null
-          created_at?: string
-          crop_id?: string | null
-          entry_date?: string
-          id?: string
-          title: string
-          user_id: string
-        }
+          body?: string | null;
+          created_at?: string;
+          crop_id?: string | null;
+          entry_date?: string;
+          id?: string;
+          title: string;
+          user_id: string;
+        };
         Update: {
-          body?: string | null
-          created_at?: string
-          crop_id?: string | null
-          entry_date?: string
-          id?: string
-          title?: string
-          user_id?: string
-        }
+          body?: string | null;
+          created_at?: string;
+          crop_id?: string | null;
+          entry_date?: string;
+          id?: string;
+          title?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "farm_journal_entries_crop_id_fkey"
-            columns: ["crop_id"]
-            isOneToOne: false
-            referencedRelation: "farm_crops"
-            referencedColumns: ["id"]
+            foreignKeyName: "farm_journal_entries_crop_id_fkey";
+            columns: ["crop_id"];
+            isOneToOne: false;
+            referencedRelation: "farm_crops";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       farm_sales: {
         Row: {
-          amount_zar: number
-          buyer: string | null
-          created_at: string
-          crop_id: string | null
-          id: string
-          note: string | null
-          quantity_kg: number | null
-          sold_on: string
-          user_id: string
-        }
+          amount_zar: number;
+          buyer: string | null;
+          created_at: string;
+          crop_id: string | null;
+          id: string;
+          note: string | null;
+          quantity_kg: number | null;
+          sold_on: string;
+          user_id: string;
+        };
         Insert: {
-          amount_zar: number
-          buyer?: string | null
-          created_at?: string
-          crop_id?: string | null
-          id?: string
-          note?: string | null
-          quantity_kg?: number | null
-          sold_on?: string
-          user_id: string
-        }
+          amount_zar: number;
+          buyer?: string | null;
+          created_at?: string;
+          crop_id?: string | null;
+          id?: string;
+          note?: string | null;
+          quantity_kg?: number | null;
+          sold_on?: string;
+          user_id: string;
+        };
         Update: {
-          amount_zar?: number
-          buyer?: string | null
-          created_at?: string
-          crop_id?: string | null
-          id?: string
-          note?: string | null
-          quantity_kg?: number | null
-          sold_on?: string
-          user_id?: string
-        }
+          amount_zar?: number;
+          buyer?: string | null;
+          created_at?: string;
+          crop_id?: string | null;
+          id?: string;
+          note?: string | null;
+          quantity_kg?: number | null;
+          sold_on?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "farm_sales_crop_id_fkey"
-            columns: ["crop_id"]
-            isOneToOne: false
-            referencedRelation: "farm_crops"
-            referencedColumns: ["id"]
+            foreignKeyName: "farm_sales_crop_id_fkey";
+            columns: ["crop_id"];
+            isOneToOne: false;
+            referencedRelation: "farm_crops";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       grants: {
         Row: {
-          amount_zar: number | null
-          created_at: string
-          crops: string[] | null
-          deadline: string | null
-          description: string | null
-          id: string
-          is_active: boolean
-          max_size_ha: number | null
-          min_size_ha: number | null
-          provider: string | null
-          province: string | null
-          title: string
-          updated_at: string
-          url: string | null
-        }
+          amount_zar: number | null;
+          created_at: string;
+          crops: string[] | null;
+          deadline: string | null;
+          description: string | null;
+          id: string;
+          is_active: boolean;
+          max_size_ha: number | null;
+          min_size_ha: number | null;
+          provider: string | null;
+          province: string | null;
+          title: string;
+          updated_at: string;
+          url: string | null;
+        };
         Insert: {
-          amount_zar?: number | null
-          created_at?: string
-          crops?: string[] | null
-          deadline?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_size_ha?: number | null
-          min_size_ha?: number | null
-          provider?: string | null
-          province?: string | null
-          title: string
-          updated_at?: string
-          url?: string | null
-        }
+          amount_zar?: number | null;
+          created_at?: string;
+          crops?: string[] | null;
+          deadline?: string | null;
+          description?: string | null;
+          id?: string;
+          is_active?: boolean;
+          max_size_ha?: number | null;
+          min_size_ha?: number | null;
+          provider?: string | null;
+          province?: string | null;
+          title: string;
+          updated_at?: string;
+          url?: string | null;
+        };
         Update: {
-          amount_zar?: number | null
-          created_at?: string
-          crops?: string[] | null
-          deadline?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_size_ha?: number | null
-          min_size_ha?: number | null
-          provider?: string | null
-          province?: string | null
-          title?: string
-          updated_at?: string
-          url?: string | null
-        }
-        Relationships: []
-      }
+          amount_zar?: number | null;
+          created_at?: string;
+          crops?: string[] | null;
+          deadline?: string | null;
+          description?: string | null;
+          id?: string;
+          is_active?: boolean;
+          max_size_ha?: number | null;
+          min_size_ha?: number | null;
+          provider?: string | null;
+          province?: string | null;
+          title?: string;
+          updated_at?: string;
+          url?: string | null;
+        };
+        Relationships: [];
+      };
       irrigation_schedule: {
         Row: {
-          created_at: string
-          crop_id: string | null
-          day_of_week: number
-          duration_minutes: number
-          enabled: boolean
-          id: string
-          method: string | null
-          time_of_day: string
-          user_id: string
-        }
+          created_at: string;
+          crop_id: string | null;
+          day_of_week: number;
+          duration_minutes: number;
+          enabled: boolean;
+          id: string;
+          method: string | null;
+          time_of_day: string;
+          user_id: string;
+        };
         Insert: {
-          created_at?: string
-          crop_id?: string | null
-          day_of_week: number
-          duration_minutes?: number
-          enabled?: boolean
-          id?: string
-          method?: string | null
-          time_of_day?: string
-          user_id: string
-        }
+          created_at?: string;
+          crop_id?: string | null;
+          day_of_week: number;
+          duration_minutes?: number;
+          enabled?: boolean;
+          id?: string;
+          method?: string | null;
+          time_of_day?: string;
+          user_id: string;
+        };
         Update: {
-          created_at?: string
-          crop_id?: string | null
-          day_of_week?: number
-          duration_minutes?: number
-          enabled?: boolean
-          id?: string
-          method?: string | null
-          time_of_day?: string
-          user_id?: string
-        }
+          created_at?: string;
+          crop_id?: string | null;
+          day_of_week?: number;
+          duration_minutes?: number;
+          enabled?: boolean;
+          id?: string;
+          method?: string | null;
+          time_of_day?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "irrigation_schedule_crop_id_fkey"
-            columns: ["crop_id"]
-            isOneToOne: false
-            referencedRelation: "farm_crops"
-            referencedColumns: ["id"]
+            foreignKeyName: "irrigation_schedule_crop_id_fkey";
+            columns: ["crop_id"];
+            isOneToOne: false;
+            referencedRelation: "farm_crops";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       job_applications: {
         Row: {
-          applicant_id: string
-          contact_phone: string | null
-          cover_note: string | null
-          created_at: string
-          farmer_id: string
-          id: string
-          job_id: string
-          status: string
-          updated_at: string
-        }
+          applicant_id: string;
+          contact_phone: string | null;
+          cover_note: string | null;
+          created_at: string;
+          farmer_id: string;
+          id: string;
+          job_id: string;
+          status: string;
+          updated_at: string;
+        };
         Insert: {
-          applicant_id: string
-          contact_phone?: string | null
-          cover_note?: string | null
-          created_at?: string
-          farmer_id: string
-          id?: string
-          job_id: string
-          status?: string
-          updated_at?: string
-        }
+          applicant_id: string;
+          contact_phone?: string | null;
+          cover_note?: string | null;
+          created_at?: string;
+          farmer_id: string;
+          id?: string;
+          job_id: string;
+          status?: string;
+          updated_at?: string;
+        };
         Update: {
-          applicant_id?: string
-          contact_phone?: string | null
-          cover_note?: string | null
-          created_at?: string
-          farmer_id?: string
-          id?: string
-          job_id?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          applicant_id?: string;
+          contact_phone?: string | null;
+          cover_note?: string | null;
+          created_at?: string;
+          farmer_id?: string;
+          id?: string;
+          job_id?: string;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       jobs: {
         Row: {
-          category: string
-          created_at: string
-          description: string | null
-          end_date: string | null
-          farmer_id: string
-          id: string
-          location: string | null
-          pay_rate: number
-          pay_unit: string
-          start_date: string | null
-          status: string
-          title: string
-          updated_at: string
-          workers_needed: number
-        }
+          category: string;
+          created_at: string;
+          description: string | null;
+          end_date: string | null;
+          farmer_id: string;
+          id: string;
+          location: string | null;
+          pay_rate: number;
+          pay_unit: string;
+          start_date: string | null;
+          status: string;
+          title: string;
+          updated_at: string;
+          workers_needed: number;
+        };
         Insert: {
-          category: string
-          created_at?: string
-          description?: string | null
-          end_date?: string | null
-          farmer_id: string
-          id?: string
-          location?: string | null
-          pay_rate: number
-          pay_unit?: string
-          start_date?: string | null
-          status?: string
-          title: string
-          updated_at?: string
-          workers_needed?: number
-        }
+          category: string;
+          created_at?: string;
+          description?: string | null;
+          end_date?: string | null;
+          farmer_id: string;
+          id?: string;
+          location?: string | null;
+          pay_rate: number;
+          pay_unit?: string;
+          start_date?: string | null;
+          status?: string;
+          title: string;
+          updated_at?: string;
+          workers_needed?: number;
+        };
         Update: {
-          category?: string
-          created_at?: string
-          description?: string | null
-          end_date?: string | null
-          farmer_id?: string
-          id?: string
-          location?: string | null
-          pay_rate?: number
-          pay_unit?: string
-          start_date?: string | null
-          status?: string
-          title?: string
-          updated_at?: string
-          workers_needed?: number
-        }
-        Relationships: []
-      }
+          category?: string;
+          created_at?: string;
+          description?: string | null;
+          end_date?: string | null;
+          farmer_id?: string;
+          id?: string;
+          location?: string | null;
+          pay_rate?: number;
+          pay_unit?: string;
+          start_date?: string | null;
+          status?: string;
+          title?: string;
+          updated_at?: string;
+          workers_needed?: number;
+        };
+        Relationships: [];
+      };
       listings: {
         Row: {
-          created_at: string
-          crop: string
-          description: string | null
-          farmer_id: string
-          id: string
-          image_url: string | null
-          location: string | null
-          price_per_unit: number
-          quantity_available: number
-          status: string
-          title: string
-          unit: string
-          updated_at: string
-        }
+          created_at: string;
+          crop: string;
+          description: string | null;
+          farmer_id: string;
+          id: string;
+          image_url: string | null;
+          location: string | null;
+          price_per_unit: number;
+          quantity_available: number;
+          status: string;
+          title: string;
+          unit: string;
+          updated_at: string;
+        };
         Insert: {
-          created_at?: string
-          crop: string
-          description?: string | null
-          farmer_id: string
-          id?: string
-          image_url?: string | null
-          location?: string | null
-          price_per_unit: number
-          quantity_available: number
-          status?: string
-          title: string
-          unit?: string
-          updated_at?: string
-        }
+          created_at?: string;
+          crop: string;
+          description?: string | null;
+          farmer_id: string;
+          id?: string;
+          image_url?: string | null;
+          location?: string | null;
+          price_per_unit: number;
+          quantity_available: number;
+          status?: string;
+          title: string;
+          unit?: string;
+          updated_at?: string;
+        };
         Update: {
-          created_at?: string
-          crop?: string
-          description?: string | null
-          farmer_id?: string
-          id?: string
-          image_url?: string | null
-          location?: string | null
-          price_per_unit?: number
-          quantity_available?: number
-          status?: string
-          title?: string
-          unit?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          crop?: string;
+          description?: string | null;
+          farmer_id?: string;
+          id?: string;
+          image_url?: string | null;
+          location?: string | null;
+          price_per_unit?: number;
+          quantity_available?: number;
+          status?: string;
+          title?: string;
+          unit?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       messages: {
         Row: {
-          body: string
-          created_at: string
-          id: string
-          order_id: string
-          sender_id: string
-        }
+          body: string;
+          created_at: string;
+          id: string;
+          order_id: string;
+          sender_id: string;
+        };
         Insert: {
-          body: string
-          created_at?: string
-          id?: string
-          order_id: string
-          sender_id: string
-        }
+          body: string;
+          created_at?: string;
+          id?: string;
+          order_id: string;
+          sender_id: string;
+        };
         Update: {
-          body?: string
-          created_at?: string
-          id?: string
-          order_id?: string
-          sender_id?: string
-        }
+          body?: string;
+          created_at?: string;
+          id?: string;
+          order_id?: string;
+          sender_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "messages_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
+            foreignKeyName: "messages_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       notifications: {
         Row: {
-          body: string | null
-          created_at: string
-          id: string
-          link: string | null
-          read: boolean
-          title: string
-          type: string | null
-          user_id: string
-        }
+          body: string | null;
+          created_at: string;
+          id: string;
+          link: string | null;
+          read: boolean;
+          title: string;
+          type: string | null;
+          user_id: string;
+        };
         Insert: {
-          body?: string | null
-          created_at?: string
-          id?: string
-          link?: string | null
-          read?: boolean
-          title: string
-          type?: string | null
-          user_id: string
-        }
+          body?: string | null;
+          created_at?: string;
+          id?: string;
+          link?: string | null;
+          read?: boolean;
+          title: string;
+          type?: string | null;
+          user_id: string;
+        };
         Update: {
-          body?: string | null
-          created_at?: string
-          id?: string
-          link?: string | null
-          read?: boolean
-          title?: string
-          type?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
+          body?: string | null;
+          created_at?: string;
+          id?: string;
+          link?: string | null;
+          read?: boolean;
+          title?: string;
+          type?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       orders: {
         Row: {
-          buyer_id: string
-          contact_phone: string | null
-          created_at: string
-          farmer_id: string
-          id: string
-          listing_id: string
-          notes: string | null
-          quantity: number
-          status: string
-          total_price: number
-          updated_at: string
-        }
+          buyer_id: string;
+          contact_phone: string | null;
+          created_at: string;
+          farmer_id: string;
+          id: string;
+          listing_id: string;
+          notes: string | null;
+          quantity: number;
+          status: string;
+          total_price: number;
+          updated_at: string;
+        };
         Insert: {
-          buyer_id: string
-          contact_phone?: string | null
-          created_at?: string
-          farmer_id: string
-          id?: string
-          listing_id: string
-          notes?: string | null
-          quantity: number
-          status?: string
-          total_price: number
-          updated_at?: string
-        }
+          buyer_id: string;
+          contact_phone?: string | null;
+          created_at?: string;
+          farmer_id: string;
+          id?: string;
+          listing_id: string;
+          notes?: string | null;
+          quantity: number;
+          status?: string;
+          total_price: number;
+          updated_at?: string;
+        };
         Update: {
-          buyer_id?: string
-          contact_phone?: string | null
-          created_at?: string
-          farmer_id?: string
-          id?: string
-          listing_id?: string
-          notes?: string | null
-          quantity?: number
-          status?: string
-          total_price?: number
-          updated_at?: string
-        }
+          buyer_id?: string;
+          contact_phone?: string | null;
+          created_at?: string;
+          farmer_id?: string;
+          id?: string;
+          listing_id?: string;
+          notes?: string | null;
+          quantity?: number;
+          status?: string;
+          total_price?: number;
+          updated_at?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "orders_listing_id_fkey"
-            columns: ["listing_id"]
-            isOneToOne: false
-            referencedRelation: "listings"
-            referencedColumns: ["id"]
+            foreignKeyName: "orders_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       payment_events: {
         Row: {
-          amount_gross: number | null
-          billing_date: string | null
-          created_at: string
-          id: string
-          m_payment_id: string | null
-          payment_status: string | null
-          pf_payment_id: string | null
-          raw: Json
-          token: string | null
-          user_id: string | null
-        }
+          amount_gross: number | null;
+          billing_date: string | null;
+          created_at: string;
+          id: string;
+          m_payment_id: string | null;
+          payment_status: string | null;
+          pf_payment_id: string | null;
+          raw: Json;
+          token: string | null;
+          user_id: string | null;
+        };
         Insert: {
-          amount_gross?: number | null
-          billing_date?: string | null
-          created_at?: string
-          id?: string
-          m_payment_id?: string | null
-          payment_status?: string | null
-          pf_payment_id?: string | null
-          raw: Json
-          token?: string | null
-          user_id?: string | null
-        }
+          amount_gross?: number | null;
+          billing_date?: string | null;
+          created_at?: string;
+          id?: string;
+          m_payment_id?: string | null;
+          payment_status?: string | null;
+          pf_payment_id?: string | null;
+          raw: Json;
+          token?: string | null;
+          user_id?: string | null;
+        };
         Update: {
-          amount_gross?: number | null
-          billing_date?: string | null
-          created_at?: string
-          id?: string
-          m_payment_id?: string | null
-          payment_status?: string | null
-          pf_payment_id?: string | null
-          raw?: Json
-          token?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+          amount_gross?: number | null;
+          billing_date?: string | null;
+          created_at?: string;
+          id?: string;
+          m_payment_id?: string | null;
+          payment_status?: string | null;
+          pf_payment_id?: string | null;
+          raw?: Json;
+          token?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
-          account_type: Database["public"]["Enums"]["account_type"]
-          avatar_url: string | null
-          created_at: string
-          crops: string[] | null
-          farm_name: string | null
-          farm_size_ha: number | null
-          full_name: string | null
-          id: string
-          is_premium: boolean
-          is_service_provider_enabled: boolean
-          livestock: string[] | null
-          location: string | null
-          next_billing_date: string | null
-          payfast_token: string | null
-          plan: string
-          subscription_cancelled_at: string | null
-          subscription_started_at: string | null
-          subscription_status: string | null
-          updated_at: string
-          verification_status: Database["public"]["Enums"]["verification_status"]
-          verification_submitted_at: string | null
-          verified_at: string | null
-        }
+          account_type: Database["public"]["Enums"]["account_type"];
+          avatar_url: string | null;
+          created_at: string;
+          crops: string[] | null;
+          farm_name: string | null;
+          farm_size_ha: number | null;
+          full_name: string | null;
+          id: string;
+          is_premium: boolean;
+          is_service_provider_enabled: boolean;
+          livestock: string[] | null;
+          location: string | null;
+          next_billing_date: string | null;
+          payfast_token: string | null;
+          plan: string;
+          subscription_cancelled_at: string | null;
+          subscription_started_at: string | null;
+          subscription_status: string | null;
+          updated_at: string;
+          verification_status: Database["public"]["Enums"]["verification_status"];
+          verification_submitted_at: string | null;
+          verified_at: string | null;
+        };
         Insert: {
-          account_type?: Database["public"]["Enums"]["account_type"]
-          avatar_url?: string | null
-          created_at?: string
-          crops?: string[] | null
-          farm_name?: string | null
-          farm_size_ha?: number | null
-          full_name?: string | null
-          id: string
-          is_premium?: boolean
-          is_service_provider_enabled?: boolean
-          livestock?: string[] | null
-          location?: string | null
-          next_billing_date?: string | null
-          payfast_token?: string | null
-          plan?: string
-          subscription_cancelled_at?: string | null
-          subscription_started_at?: string | null
-          subscription_status?: string | null
-          updated_at?: string
-          verification_status?: Database["public"]["Enums"]["verification_status"]
-          verification_submitted_at?: string | null
-          verified_at?: string | null
-        }
+          account_type?: Database["public"]["Enums"]["account_type"];
+          avatar_url?: string | null;
+          created_at?: string;
+          crops?: string[] | null;
+          farm_name?: string | null;
+          farm_size_ha?: number | null;
+          full_name?: string | null;
+          id: string;
+          is_premium?: boolean;
+          is_service_provider_enabled?: boolean;
+          livestock?: string[] | null;
+          location?: string | null;
+          next_billing_date?: string | null;
+          payfast_token?: string | null;
+          plan?: string;
+          subscription_cancelled_at?: string | null;
+          subscription_started_at?: string | null;
+          subscription_status?: string | null;
+          updated_at?: string;
+          verification_status?: Database["public"]["Enums"]["verification_status"];
+          verification_submitted_at?: string | null;
+          verified_at?: string | null;
+        };
         Update: {
-          account_type?: Database["public"]["Enums"]["account_type"]
-          avatar_url?: string | null
-          created_at?: string
-          crops?: string[] | null
-          farm_name?: string | null
-          farm_size_ha?: number | null
-          full_name?: string | null
-          id?: string
-          is_premium?: boolean
-          is_service_provider_enabled?: boolean
-          livestock?: string[] | null
-          location?: string | null
-          next_billing_date?: string | null
-          payfast_token?: string | null
-          plan?: string
-          subscription_cancelled_at?: string | null
-          subscription_started_at?: string | null
-          subscription_status?: string | null
-          updated_at?: string
-          verification_status?: Database["public"]["Enums"]["verification_status"]
-          verification_submitted_at?: string | null
-          verified_at?: string | null
-        }
-        Relationships: []
-      }
+          account_type?: Database["public"]["Enums"]["account_type"];
+          avatar_url?: string | null;
+          created_at?: string;
+          crops?: string[] | null;
+          farm_name?: string | null;
+          farm_size_ha?: number | null;
+          full_name?: string | null;
+          id?: string;
+          is_premium?: boolean;
+          is_service_provider_enabled?: boolean;
+          livestock?: string[] | null;
+          location?: string | null;
+          next_billing_date?: string | null;
+          payfast_token?: string | null;
+          plan?: string;
+          subscription_cancelled_at?: string | null;
+          subscription_started_at?: string | null;
+          subscription_status?: string | null;
+          updated_at?: string;
+          verification_status?: Database["public"]["Enums"]["verification_status"];
+          verification_submitted_at?: string | null;
+          verified_at?: string | null;
+        };
+        Relationships: [];
+      };
       ratings: {
         Row: {
-          comment: string | null
-          created_at: string
-          id: string
-          order_id: string
-          ratee_id: string
-          rater_id: string
-          stars: number
-        }
+          comment: string | null;
+          created_at: string;
+          id: string;
+          order_id: string;
+          ratee_id: string;
+          rater_id: string;
+          stars: number;
+        };
         Insert: {
-          comment?: string | null
-          created_at?: string
-          id?: string
-          order_id: string
-          ratee_id: string
-          rater_id: string
-          stars: number
-        }
+          comment?: string | null;
+          created_at?: string;
+          id?: string;
+          order_id: string;
+          ratee_id: string;
+          rater_id: string;
+          stars: number;
+        };
         Update: {
-          comment?: string | null
-          created_at?: string
-          id?: string
-          order_id?: string
-          ratee_id?: string
-          rater_id?: string
-          stars?: number
-        }
+          comment?: string | null;
+          created_at?: string;
+          id?: string;
+          order_id?: string;
+          ratee_id?: string;
+          rater_id?: string;
+          stars?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "ratings_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
+            foreignKeyName: "ratings_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       services: {
         Row: {
-          category: string
-          created_at: string
-          description: string | null
-          id: string
-          image_url: string | null
-          location: string | null
-          price_per_unit: number
-          provider_id: string
-          service_area: string | null
-          status: string
-          title: string
-          unit: string
-          updated_at: string
-        }
+          category: string;
+          created_at: string;
+          description: string | null;
+          id: string;
+          image_url: string | null;
+          location: string | null;
+          price_per_unit: number;
+          provider_id: string;
+          service_area: string | null;
+          status: string;
+          title: string;
+          unit: string;
+          updated_at: string;
+        };
         Insert: {
-          category: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          location?: string | null
-          price_per_unit: number
-          provider_id: string
-          service_area?: string | null
-          status?: string
-          title: string
-          unit?: string
-          updated_at?: string
-        }
+          category: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          image_url?: string | null;
+          location?: string | null;
+          price_per_unit: number;
+          provider_id: string;
+          service_area?: string | null;
+          status?: string;
+          title: string;
+          unit?: string;
+          updated_at?: string;
+        };
         Update: {
-          category?: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          location?: string | null
-          price_per_unit?: number
-          provider_id?: string
-          service_area?: string | null
-          status?: string
-          title?: string
-          unit?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          category?: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          image_url?: string | null;
+          location?: string | null;
+          price_per_unit?: number;
+          provider_id?: string;
+          service_area?: string | null;
+          status?: string;
+          title?: string;
+          unit?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       tasks: {
         Row: {
-          carried_over: boolean
-          completed: boolean
-          completed_at: string | null
-          created_at: string
-          description: string | null
-          due_at: string | null
-          id: string
-          priority: string
-          task_date: string
-          title: string
-          updated_at: string
-          user_id: string
-        }
+          carried_over: boolean;
+          completed: boolean;
+          completed_at: string | null;
+          created_at: string;
+          description: string | null;
+          due_at: string | null;
+          id: string;
+          priority: string;
+          task_date: string;
+          title: string;
+          updated_at: string;
+          user_id: string;
+        };
         Insert: {
-          carried_over?: boolean
-          completed?: boolean
-          completed_at?: string | null
-          created_at?: string
-          description?: string | null
-          due_at?: string | null
-          id?: string
-          priority?: string
-          task_date?: string
-          title: string
-          updated_at?: string
-          user_id: string
-        }
+          carried_over?: boolean;
+          completed?: boolean;
+          completed_at?: string | null;
+          created_at?: string;
+          description?: string | null;
+          due_at?: string | null;
+          id?: string;
+          priority?: string;
+          task_date?: string;
+          title: string;
+          updated_at?: string;
+          user_id: string;
+        };
         Update: {
-          carried_over?: boolean
-          completed?: boolean
-          completed_at?: string | null
-          created_at?: string
-          description?: string | null
-          due_at?: string | null
-          id?: string
-          priority?: string
-          task_date?: string
-          title?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-    }
+          carried_over?: boolean;
+          completed?: boolean;
+          completed_at?: string | null;
+          created_at?: string;
+          description?: string | null;
+          due_at?: string | null;
+          id?: string;
+          priority?: string;
+          task_date?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      account_type: "farmer" | "buyer" | "service_provider"
-      verification_status: "unverified" | "pending" | "verified"
-    }
+      account_type: "farmer" | "buyer" | "service_provider";
+      verification_status: "unverified" | "pending" | "verified";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   public: {
@@ -1065,4 +1057,4 @@ export const Constants = {
       verification_status: ["unverified", "pending", "verified"],
     },
   },
-} as const
+} as const;

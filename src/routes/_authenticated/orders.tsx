@@ -15,7 +15,9 @@ function OrdersPage() {
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-6">
         <h1 className="text-2xl font-bold">Active orders</h1>
-        <p className="mb-6 text-sm text-muted-foreground">Track your pending and accepted orders.</p>
+        <p className="mb-6 text-sm text-muted-foreground">
+          Track your pending and accepted orders.
+        </p>
         <OrdersList userId={user.id} mode="active" />
       </main>
     </div>

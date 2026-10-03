@@ -6,10 +6,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Sprout, Trash2, BookOpen, Droplets, BarChart3 } from "lucide-react";
+import {
+  Loader2,
+  Plus,
+  Sprout,
+  Trash2,
+  BookOpen,
+  Droplets,
+  ArrowRight,
+  ChartNoAxesCombined,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -65,7 +87,9 @@ function MyFarmPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [user?.id]);
+  useEffect(() => {
+    load(); /* eslint-disable-next-line */
+  }, [user?.id]);
 
   const save = async () => {
     if (!user) return;
@@ -85,7 +109,15 @@ function MyFarmPage() {
     if (error) return toast.error(error.message);
     toast.success("Crop added");
     setOpen(false);
-    setForm({ crop: "", field_name: "", hectares: "1", planting_date: "", expected_harvest_date: "", status: "planned", notes: "" });
+    setForm({
+      crop: "",
+      field_name: "",
+      hectares: "1",
+      planting_date: "",
+      expected_harvest_date: "",
+      status: "planned",
+      notes: "",
+    });
     load();
   };
 
@@ -111,43 +143,77 @@ function MyFarmPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold md:text-3xl">My Farm</h1>
-            <p className="text-sm text-muted-foreground">Track every crop on your farm — rotation, sowing, harvest.</p>
+            <p className="text-sm text-muted-foreground">
+              Track every crop on your farm — rotation, sowing, harvest.
+            </p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button size="lg" className="min-h-12"><Plus className="mr-2 h-5 w-5" />Add crop</Button>
+              <Button size="lg" className="min-h-12">
+                <Plus className="mr-2 h-5 w-5" />
+                Add crop
+              </Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>Add a crop</DialogTitle></DialogHeader>
+              <DialogHeader>
+                <DialogTitle>Add a crop</DialogTitle>
+              </DialogHeader>
               <div className="grid gap-3">
                 <div className="grid gap-1.5">
                   <Label>Crop *</Label>
-                  <Input placeholder="Maize" value={form.crop} onChange={(e) => setForm({ ...form, crop: e.target.value })} />
+                  <Input
+                    placeholder="Maize"
+                    value={form.crop}
+                    onChange={(e) => setForm({ ...form, crop: e.target.value })}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="grid gap-1.5">
                     <Label>Field name</Label>
-                    <Input placeholder="North field" value={form.field_name} onChange={(e) => setForm({ ...form, field_name: e.target.value })} />
+                    <Input
+                      placeholder="North field"
+                      value={form.field_name}
+                      onChange={(e) => setForm({ ...form, field_name: e.target.value })}
+                    />
                   </div>
                   <div className="grid gap-1.5">
                     <Label>Hectares</Label>
-                    <Input type="number" min={0} step="0.1" value={form.hectares} onChange={(e) => setForm({ ...form, hectares: e.target.value })} />
+                    <Input
+                      type="number"
+                      min={0}
+                      step="0.1"
+                      value={form.hectares}
+                      onChange={(e) => setForm({ ...form, hectares: e.target.value })}
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="grid gap-1.5">
                     <Label>Planted</Label>
-                    <Input type="date" value={form.planting_date} onChange={(e) => setForm({ ...form, planting_date: e.target.value })} />
+                    <Input
+                      type="date"
+                      value={form.planting_date}
+                      onChange={(e) => setForm({ ...form, planting_date: e.target.value })}
+                    />
                   </div>
                   <div className="grid gap-1.5">
                     <Label>Expected harvest</Label>
-                    <Input type="date" value={form.expected_harvest_date} onChange={(e) => setForm({ ...form, expected_harvest_date: e.target.value })} />
+                    <Input
+                      type="date"
+                      value={form.expected_harvest_date}
+                      onChange={(e) => setForm({ ...form, expected_harvest_date: e.target.value })}
+                    />
                   </div>
                 </div>
                 <div className="grid gap-1.5">
                   <Label>Status</Label>
-                  <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                  <Select
+                    value={form.status}
+                    onValueChange={(v) => setForm({ ...form, status: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="planned">Planned</SelectItem>
                       <SelectItem value="growing">Growing</SelectItem>
@@ -158,12 +224,20 @@ function MyFarmPage() {
                 </div>
                 <div className="grid gap-1.5">
                   <Label>Notes</Label>
-                  <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+                  <Textarea
+                    rows={2}
+                    value={form.notes}
+                    onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                  />
                 </div>
               </div>
               <DialogFooter>
                 <Button onClick={save} disabled={saving} className="w-full min-h-12">
-                  {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+                  {saving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Plus className="mr-2 h-4 w-4" />
+                  )}
                   Save crop
                 </Button>
               </DialogFooter>
@@ -182,38 +256,64 @@ function MyFarmPage() {
           </Card>
           <Card className="p-4">
             <div className="text-xs text-muted-foreground">Growing now</div>
-            <div className="mt-1 text-2xl font-bold">{crops.filter(c => c.status === "growing").length}</div>
+            <div className="mt-1 text-2xl font-bold">
+              {crops.filter((c) => c.status === "growing").length}
+            </div>
           </Card>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Link to={"/journal" as never}>
-            <Card className="tilt-card flex items-center gap-3 p-4">
-              <BookOpen className="h-6 w-6 text-primary" />
-              <div><div className="font-semibold">Farm Journal</div><div className="text-xs text-muted-foreground">Daily logbook</div></div>
-            </Card>
-          </Link>
-          <Link to={"/irrigation" as never}>
-            <Card className="tilt-card flex items-center gap-3 p-4">
-              <Droplets className="h-6 w-6 text-primary" />
-              <div><div className="font-semibold">Irrigation</div><div className="text-xs text-muted-foreground">Watering schedule</div></div>
-            </Card>
-          </Link>
-          <Link to={"/stats" as never}>
-            <Card className="tilt-card flex items-center gap-3 p-4">
-              <BarChart3 className="h-6 w-6 text-primary" />
-              <div><div className="font-semibold">Stats & P&amp;L</div><div className="text-xs text-muted-foreground">Profit per crop</div></div>
-            </Card>
-          </Link>
-        </div>
+        <section className="space-y-3">
+          <div>
+            <h2 className="text-lg font-semibold">Farm workspace</h2>
+            <p className="text-sm text-muted-foreground">
+              Keep field notes and watering plans alongside your crop records.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <Link to={"/journal" as never}>
+              <Card className="group flex items-center gap-3 p-4 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-md)]">
+                <BookOpen className="h-6 w-6 text-primary" />
+                <div className="flex-1">
+                  <div className="font-semibold">Farm Journal</div>
+                  <div className="text-xs text-muted-foreground">Daily logbook</div>
+                </div>
+                <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+              </Card>
+            </Link>
+            <Link to={"/irrigation" as never}>
+              <Card className="group flex items-center gap-3 p-4 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-md)]">
+                <Droplets className="h-6 w-6 text-primary" />
+                <div className="flex-1">
+                  <div className="font-semibold">Irrigation Planner</div>
+                  <div className="text-xs text-muted-foreground">Watering schedule</div>
+                </div>
+                <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+              </Card>
+            </Link>
+            <Link to={"/stats" as never}>
+              <Card className="group flex items-center gap-3 p-4 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-md)]">
+                <ChartNoAxesCombined className="h-6 w-6 text-primary" />
+                <div className="flex-1">
+                  <div className="font-semibold">Stats &amp; Profit</div>
+                  <div className="text-xs text-muted-foreground">Track sales, costs and profit</div>
+                </div>
+                <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+              </Card>
+            </Link>
+          </div>
+        </section>
 
         {loading ? (
-          <div className="flex items-center text-muted-foreground"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading…</div>
+          <div className="flex items-center text-muted-foreground">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading…
+          </div>
         ) : crops.length === 0 ? (
           <Card className="flex flex-col items-center gap-3 p-10 text-center">
             <Sprout className="h-10 w-10 text-primary" />
             <div className="font-semibold">No crops yet</div>
-            <p className="max-w-sm text-sm text-muted-foreground">Add your first crop to plan rotation, log activity, and track profit.</p>
+            <p className="max-w-sm text-sm text-muted-foreground">
+              Add your first crop to organize rotations, planting dates, and harvests.
+            </p>
           </Card>
         ) : (
           <div className="grid gap-3">
@@ -223,17 +323,22 @@ function MyFarmPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-lg font-semibold">{c.crop}</h3>
-                      <Badge className={STATUS_COLORS[c.status] ?? STATUS_COLORS.planned}>{c.status}</Badge>
+                      <Badge className={STATUS_COLORS[c.status] ?? STATUS_COLORS.planned}>
+                        {c.status}
+                      </Badge>
                     </div>
                     <div className="mt-1 text-sm text-muted-foreground">
-                      {c.field_name && <>📍 {c.field_name} · </>}{Number(c.hectares).toFixed(1)} ha
+                      {c.field_name && <>📍 {c.field_name} · </>}
+                      {Number(c.hectares).toFixed(1)} ha
                       {c.planting_date && <> · planted {c.planting_date}</>}
                       {c.expected_harvest_date && <> · harvest {c.expected_harvest_date}</>}
                     </div>
                     {c.notes && <p className="mt-2 text-sm">{c.notes}</p>}
                     <div className="mt-3 flex flex-wrap gap-2">
                       <Select value={c.status} onValueChange={(v) => updateStatus(c.id, v)}>
-                        <SelectTrigger className="h-9 w-40"><SelectValue /></SelectTrigger>
+                        <SelectTrigger className="h-9 w-40">
+                          <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="planned">Planned</SelectItem>
                           <SelectItem value="growing">Growing</SelectItem>
@@ -243,7 +348,12 @@ function MyFarmPage() {
                       </Select>
                     </div>
                   </div>
-                  <Button size="icon" variant="ghost" onClick={() => remove(c.id)} aria-label="Delete crop">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => remove(c.id)}
+                    aria-label="Delete crop"
+                  >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
                 </div>

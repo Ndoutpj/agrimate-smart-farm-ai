@@ -5,14 +5,38 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Loader2, Plus, TrendingUp, TrendingDown, Wallet, Coins, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Cell,
+} from "recharts";
 
 export const Route = createFileRoute("/_authenticated/stats")({
   component: StatsPage,
@@ -20,11 +44,27 @@ export const Route = createFileRoute("/_authenticated/stats")({
 });
 
 type Crop = { id: string; crop: string; hectares: number; status: string };
-type Expense = { id: string; crop_id: string | null; category: string; amount_zar: number; spent_on: string };
-type Sale = { id: string; crop_id: string | null; amount_zar: number; quantity_kg: number | null; sold_on: string };
+type Expense = {
+  id: string;
+  crop_id: string | null;
+  category: string;
+  amount_zar: number;
+  spent_on: string;
+};
+type Sale = {
+  id: string;
+  crop_id: string | null;
+  amount_zar: number;
+  quantity_kg: number | null;
+  sold_on: string;
+};
 
 const zar = (n: number) =>
-  new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("en-ZA", {
+    style: "currency",
+    currency: "ZAR",
+    maximumFractionDigits: 0,
+  }).format(n);
 
 function StatsPage() {
   const { user } = useAuth();
@@ -38,8 +78,16 @@ function StatsPage() {
     setLoading(true);
     const [c, e, s] = await Promise.all([
       supabase.from("farm_crops").select("id, crop, hectares, status").eq("user_id", user.id),
-      supabase.from("farm_expenses").select("*").eq("user_id", user.id).order("spent_on", { ascending: false }),
-      supabase.from("farm_sales").select("*").eq("user_id", user.id).order("sold_on", { ascending: false }),
+      supabase
+        .from("farm_expenses")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("spent_on", { ascending: false }),
+      supabase
+        .from("farm_sales")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("sold_on", { ascending: false }),
     ]);
     setCrops((c.data as Crop[]) ?? []);
     setExpenses((e.data as Expense[]) ?? []);
@@ -47,7 +95,9 @@ function StatsPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [user?.id]);
+  useEffect(() => {
+    load(); /* eslint-disable-next-line */
+  }, [user?.id]);
 
   const totals = useMemo(() => {
     const exp = expenses.reduce((s, e) => s + Number(e.amount_zar || 0), 0);
@@ -57,12 +107,28 @@ function StatsPage() {
 
   // Per-crop breakdown
   const perCrop = useMemo(() => {
-    return crops.map((c) => {
-      const exp = expenses.filter((e) => e.crop_id === c.id).reduce((s, e) => s + Number(e.amount_zar), 0);
-      const rev = sales.filter((s) => s.crop_id === c.id).reduce((sum, s) => sum + Number(s.amount_zar), 0);
-      const kg = sales.filter((s) => s.crop_id === c.id).reduce((sum, s) => sum + Number(s.quantity_kg || 0), 0);
-      return { id: c.id, crop: c.crop, hectares: Number(c.hectares || 0), expenses: exp, revenue: rev, profit: rev - exp, kg };
-    }).sort((a, b) => b.profit - a.profit);
+    return crops
+      .map((c) => {
+        const exp = expenses
+          .filter((e) => e.crop_id === c.id)
+          .reduce((s, e) => s + Number(e.amount_zar), 0);
+        const rev = sales
+          .filter((s) => s.crop_id === c.id)
+          .reduce((sum, s) => sum + Number(s.amount_zar), 0);
+        const kg = sales
+          .filter((s) => s.crop_id === c.id)
+          .reduce((sum, s) => sum + Number(s.quantity_kg || 0), 0);
+        return {
+          id: c.id,
+          crop: c.crop,
+          hectares: Number(c.hectares || 0),
+          expenses: exp,
+          revenue: rev,
+          profit: rev - exp,
+          kg,
+        };
+      })
+      .sort((a, b) => b.profit - a.profit);
   }, [crops, expenses, sales]);
 
   // 6 month trend
@@ -92,7 +158,9 @@ function StatsPage() {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold md:text-3xl">Stats &amp; P&amp;L</h1>
-            <p className="text-sm text-muted-foreground">Track expenses, revenue, and profit per crop.</p>
+            <p className="text-sm text-muted-foreground">
+              Track expenses, revenue, and profit per crop.
+            </p>
           </div>
           <div className="flex gap-2">
             <AddDialog kind="expense" crops={crops} onSaved={load} />
@@ -102,19 +170,33 @@ function StatsPage() {
 
         <div className="grid gap-3 sm:grid-cols-3">
           <Card className="tilt-card p-5">
-            <div className="flex items-center justify-between"><Coins className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">Revenue</span></div>
+            <div className="flex items-center justify-between">
+              <Coins className="h-5 w-5 text-primary" />
+              <span className="text-xs text-muted-foreground">Revenue</span>
+            </div>
             <div className="mt-2 text-2xl font-bold">{zar(totals.rev)}</div>
           </Card>
           <Card className="tilt-card p-5">
-            <div className="flex items-center justify-between"><Wallet className="h-5 w-5 text-amber-500" /><span className="text-xs text-muted-foreground">Expenses</span></div>
+            <div className="flex items-center justify-between">
+              <Wallet className="h-5 w-5 text-amber-500" />
+              <span className="text-xs text-muted-foreground">Expenses</span>
+            </div>
             <div className="mt-2 text-2xl font-bold">{zar(totals.exp)}</div>
           </Card>
           <Card className="tilt-card p-5">
             <div className="flex items-center justify-between">
-              {totals.profit >= 0 ? <TrendingUp className="h-5 w-5 text-emerald-500" /> : <TrendingDown className="h-5 w-5 text-destructive" />}
+              {totals.profit >= 0 ? (
+                <TrendingUp className="h-5 w-5 text-emerald-500" />
+              ) : (
+                <TrendingDown className="h-5 w-5 text-destructive" />
+              )}
               <span className="text-xs text-muted-foreground">Profit</span>
             </div>
-            <div className={`mt-2 text-2xl font-bold ${totals.profit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"}`}>{zar(totals.profit)}</div>
+            <div
+              className={`mt-2 text-2xl font-bold ${totals.profit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"}`}
+            >
+              {zar(totals.profit)}
+            </div>
           </Card>
         </div>
 
@@ -139,9 +221,30 @@ function StatsPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis dataKey="m" stroke="var(--muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12 }} formatter={(v: number) => zar(v)} />
-                <Area type="monotone" dataKey="rev" name="Revenue" stroke="var(--primary)" strokeWidth={2} fill="url(#rev)" />
-                <Area type="monotone" dataKey="exp" name="Expenses" stroke="#f59e0b" strokeWidth={2} fill="url(#exp)" />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--card)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 12,
+                  }}
+                  formatter={(v: number) => zar(v)}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="rev"
+                  name="Revenue"
+                  stroke="var(--primary)"
+                  strokeWidth={2}
+                  fill="url(#rev)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="exp"
+                  name="Expenses"
+                  stroke="#f59e0b"
+                  strokeWidth={2}
+                  fill="url(#exp)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -155,8 +258,12 @@ function StatsPage() {
           </TabsList>
 
           <TabsContent value="crops" className="mt-4 space-y-4">
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : perCrop.length === 0 ? (
-              <Card className="p-8 text-center text-sm text-muted-foreground">Add crops in My Farm to see per-crop profit.</Card>
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : perCrop.length === 0 ? (
+              <Card className="p-8 text-center text-sm text-muted-foreground">
+                Add crops in My Farm to see per-crop profit.
+              </Card>
             ) : (
               <>
                 <Card className="p-5">
@@ -167,10 +274,20 @@ function StatsPage() {
                         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                         <XAxis dataKey="crop" stroke="var(--muted-foreground)" fontSize={12} />
                         <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                        <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12 }} formatter={(v: number) => zar(v)} />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 12,
+                          }}
+                          formatter={(v: number) => zar(v)}
+                        />
                         <Bar dataKey="profit" radius={[6, 6, 0, 0]}>
                           {perCrop.map((p, i) => (
-                            <Cell key={i} fill={p.profit >= 0 ? "var(--primary)" : "hsl(var(--destructive))"} />
+                            <Cell
+                              key={i}
+                              fill={p.profit >= 0 ? "var(--primary)" : "hsl(var(--destructive))"}
+                            />
                           ))}
                         </Bar>
                       </BarChart>
@@ -183,14 +300,33 @@ function StatsPage() {
                     <Card key={p.id} className="tilt-card p-4">
                       <div className="flex items-center justify-between">
                         <h3 className="font-semibold">{p.crop}</h3>
-                        <span className="text-xs text-muted-foreground">{p.hectares.toFixed(1)} ha</span>
+                        <span className="text-xs text-muted-foreground">
+                          {p.hectares.toFixed(1)} ha
+                        </span>
                       </div>
                       <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
-                        <div><div className="text-muted-foreground">Revenue</div><div className="font-medium">{zar(p.revenue)}</div></div>
-                        <div><div className="text-muted-foreground">Expenses</div><div className="font-medium">{zar(p.expenses)}</div></div>
-                        <div><div className="text-muted-foreground">Profit</div><div className={`font-semibold ${p.profit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"}`}>{zar(p.profit)}</div></div>
+                        <div>
+                          <div className="text-muted-foreground">Revenue</div>
+                          <div className="font-medium">{zar(p.revenue)}</div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Expenses</div>
+                          <div className="font-medium">{zar(p.expenses)}</div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Profit</div>
+                          <div
+                            className={`font-semibold ${p.profit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"}`}
+                          >
+                            {zar(p.profit)}
+                          </div>
+                        </div>
                       </div>
-                      {p.kg > 0 && <div className="mt-2 text-xs text-muted-foreground">Sold: {p.kg.toFixed(0)} kg</div>}
+                      {p.kg > 0 && (
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          Sold: {p.kg.toFixed(0)} kg
+                        </div>
+                      )}
                     </Card>
                   ))}
                 </div>
@@ -200,24 +336,50 @@ function StatsPage() {
 
           <TabsContent value="expenses" className="mt-4 space-y-2">
             {expenses.length === 0 ? (
-              <Card className="p-8 text-center text-sm text-muted-foreground">No expenses logged.</Card>
-            ) : expenses.map((e) => (
-              <Card key={e.id} className="flex items-center justify-between p-3 text-sm">
-                <div><div className="font-medium">{e.category}</div><div className="text-xs text-muted-foreground">{e.spent_on}{crops.find(c=>c.id===e.crop_id) && <> · {crops.find(c=>c.id===e.crop_id)!.crop}</>}</div></div>
-                <div className="font-semibold">{zar(Number(e.amount_zar))}</div>
+              <Card className="p-8 text-center text-sm text-muted-foreground">
+                No expenses logged.
               </Card>
-            ))}
+            ) : (
+              expenses.map((e) => (
+                <Card key={e.id} className="flex items-center justify-between p-3 text-sm">
+                  <div>
+                    <div className="font-medium">{e.category}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {e.spent_on}
+                      {crops.find((c) => c.id === e.crop_id) && (
+                        <> · {crops.find((c) => c.id === e.crop_id)!.crop}</>
+                      )}
+                    </div>
+                  </div>
+                  <div className="font-semibold">{zar(Number(e.amount_zar))}</div>
+                </Card>
+              ))
+            )}
           </TabsContent>
 
           <TabsContent value="sales" className="mt-4 space-y-2">
             {sales.length === 0 ? (
-              <Card className="p-8 text-center text-sm text-muted-foreground">No sales logged.</Card>
-            ) : sales.map((s) => (
-              <Card key={s.id} className="flex items-center justify-between p-3 text-sm">
-                <div><div className="font-medium">{crops.find(c=>c.id===s.crop_id)?.crop ?? "Sale"}</div><div className="text-xs text-muted-foreground">{s.sold_on}{s.quantity_kg && <> · {Number(s.quantity_kg).toFixed(0)} kg</>}</div></div>
-                <div className="font-semibold text-emerald-600 dark:text-emerald-400">{zar(Number(s.amount_zar))}</div>
+              <Card className="p-8 text-center text-sm text-muted-foreground">
+                No sales logged.
               </Card>
-            ))}
+            ) : (
+              sales.map((s) => (
+                <Card key={s.id} className="flex items-center justify-between p-3 text-sm">
+                  <div>
+                    <div className="font-medium">
+                      {crops.find((c) => c.id === s.crop_id)?.crop ?? "Sale"}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {s.sold_on}
+                      {s.quantity_kg && <> · {Number(s.quantity_kg).toFixed(0)} kg</>}
+                    </div>
+                  </div>
+                  <div className="font-semibold text-emerald-600 dark:text-emerald-400">
+                    {zar(Number(s.amount_zar))}
+                  </div>
+                </Card>
+              ))
+            )}
           </TabsContent>
         </Tabs>
       </div>
@@ -225,7 +387,15 @@ function StatsPage() {
   );
 }
 
-function AddDialog({ kind, crops, onSaved }: { kind: "expense" | "sale"; crops: Crop[]; onSaved: () => void }) {
+function AddDialog({
+  kind,
+  crops,
+  onSaved,
+}: {
+  kind: "expense" | "sale";
+  crops: Crop[];
+  onSaved: () => void;
+}) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -249,21 +419,37 @@ function AddDialog({ kind, crops, onSaved }: { kind: "expense" | "sale"; crops: 
     let error: { message: string } | null = null;
     if (kind === "expense") {
       ({ error } = await supabase.from("farm_expenses").insert({
-        user_id: user.id, crop_id: cropId, category: f.category, amount_zar: amt,
-        spent_on: f.date, note: f.note || null,
+        user_id: user.id,
+        crop_id: cropId,
+        category: f.category,
+        amount_zar: amt,
+        spent_on: f.date,
+        note: f.note || null,
       }));
     } else {
       ({ error } = await supabase.from("farm_sales").insert({
-        user_id: user.id, crop_id: cropId, buyer: f.buyer || null,
-        quantity_kg: f.qty ? Number(f.qty) : null, amount_zar: amt,
-        sold_on: f.date, note: f.note || null,
+        user_id: user.id,
+        crop_id: cropId,
+        buyer: f.buyer || null,
+        quantity_kg: f.qty ? Number(f.qty) : null,
+        amount_zar: amt,
+        sold_on: f.date,
+        note: f.note || null,
       }));
     }
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success(kind === "expense" ? "Expense logged" : "Sale logged");
     setOpen(false);
-    setF({ crop_id: "none", category: "seeds", amount: "", qty: "", buyer: "", note: "", date: today });
+    setF({
+      crop_id: "none",
+      category: "seeds",
+      amount: "",
+      qty: "",
+      buyer: "",
+      note: "",
+      date: today,
+    });
     onSaved();
   };
 
@@ -271,19 +457,28 @@ function AddDialog({ kind, crops, onSaved }: { kind: "expense" | "sale"; crops: 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant={kind === "expense" ? "outline" : "default"} className="min-h-11">
-          <Plus className="mr-2 h-4 w-4" />{kind === "expense" ? "Expense" : "Sale"}
+          <Plus className="mr-2 h-4 w-4" />
+          {kind === "expense" ? "Expense" : "Sale"}
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader><DialogTitle>{kind === "expense" ? "Log expense" : "Log sale"}</DialogTitle></DialogHeader>
+        <DialogHeader>
+          <DialogTitle>{kind === "expense" ? "Log expense" : "Log sale"}</DialogTitle>
+        </DialogHeader>
         <div className="grid gap-3">
           <div className="grid gap-1.5">
             <Label>Crop</Label>
             <Select value={f.crop_id} onValueChange={(v) => setF({ ...f, crop_id: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">— general —</SelectItem>
-                {crops.map((c) => <SelectItem key={c.id} value={c.id}>{c.crop}</SelectItem>)}
+                {crops.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.crop}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -291,7 +486,9 @@ function AddDialog({ kind, crops, onSaved }: { kind: "expense" | "sale"; crops: 
             <div className="grid gap-1.5">
               <Label>Category</Label>
               <Select value={f.category} onValueChange={(v) => setF({ ...f, category: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="seeds">Seeds</SelectItem>
                   <SelectItem value="fertilizer">Fertilizer</SelectItem>
@@ -313,24 +510,44 @@ function AddDialog({ kind, crops, onSaved }: { kind: "expense" | "sale"; crops: 
               </div>
               <div className="grid gap-1.5">
                 <Label>Quantity (kg)</Label>
-                <Input type="number" min={0} step="0.1" value={f.qty} onChange={(e) => setF({ ...f, qty: e.target.value })} />
+                <Input
+                  type="number"
+                  min={0}
+                  step="0.1"
+                  value={f.qty}
+                  onChange={(e) => setF({ ...f, qty: e.target.value })}
+                />
               </div>
             </>
           )}
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-1.5">
               <Label>Amount (ZAR)</Label>
-              <Input type="number" min={0} step="0.01" value={f.amount} onChange={(e) => setF({ ...f, amount: e.target.value })} />
+              <Input
+                type="number"
+                min={0}
+                step="0.01"
+                value={f.amount}
+                onChange={(e) => setF({ ...f, amount: e.target.value })}
+              />
             </div>
             <div className="grid gap-1.5">
               <Label>Date</Label>
-              <Input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} />
+              <Input
+                type="date"
+                value={f.date}
+                onChange={(e) => setF({ ...f, date: e.target.value })}
+              />
             </div>
           </div>
         </div>
         <DialogFooter>
           <Button onClick={save} disabled={saving} className="w-full min-h-12">
-            {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+            {saving ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Plus className="mr-2 h-4 w-4" />
+            )}
             Save
           </Button>
         </DialogFooter>

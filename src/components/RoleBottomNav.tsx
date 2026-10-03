@@ -1,5 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Leaf, ShoppingCart, User, Search, Package, History, Wrench, Calendar, Wallet, Briefcase } from "lucide-react";
+import {
+  Home,
+  Leaf,
+  ShoppingCart,
+  User,
+  Search,
+  Package,
+  History,
+  Wrench,
+  Calendar,
+  Wallet,
+  ClipboardList,
+} from "lucide-react";
 import type { AccountType } from "@/lib/profile";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +21,7 @@ const FARMER: Item[] = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/my-farm", label: "My Farm", icon: Leaf },
   { to: "/market", label: "Market", icon: ShoppingCart },
-  { to: "/stats", label: "Stats", icon: Briefcase },
+  { to: "/tasks", label: "Tasks", icon: ClipboardList },
   { to: "/profile", label: "Profile", icon: User },
 ];
 
@@ -36,10 +48,10 @@ export function RoleBottomNav({ accountType }: { accountType: AccountType }) {
   return (
     <nav
       aria-label="Primary"
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/70 bg-background/95 shadow-[0_-8px_24px_-20px_rgba(0,0,0,0.35)] backdrop-blur supports-[backdrop-filter]:bg-background/85 md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="mx-auto flex max-w-md items-stretch justify-between px-1">
+      <ul className="mx-auto flex max-w-lg items-stretch justify-between gap-1 px-2 pt-1">
         {items.map((it) => {
           const Icon = it.icon;
           return (
@@ -47,9 +59,9 @@ export function RoleBottomNav({ accountType }: { accountType: AccountType }) {
               <Link
                 to={it.to as never}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground",
+                  "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground sm:text-[11px]",
                 )}
-                activeProps={{ className: "text-primary" }}
+                activeProps={{ className: "bg-primary/10 text-primary" }}
               >
                 <Icon className="h-5 w-5" />
                 <span>{it.label}</span>

@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
@@ -28,7 +34,13 @@ export function RateOrderDialog({
   const submit = async () => {
     setSaving(true);
     const { error } = await supabase.from("ratings").upsert(
-      { order_id: orderId, rater_id: raterId, ratee_id: rateeId, stars, comment: comment.trim() || null },
+      {
+        order_id: orderId,
+        rater_id: raterId,
+        ratee_id: rateeId,
+        stars,
+        comment: comment.trim() || null,
+      },
       { onConflict: "order_id,rater_id" },
     );
     setSaving(false);
@@ -63,7 +75,9 @@ export function RateOrderDialog({
           maxLength={500}
         />
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
           <Button onClick={submit} disabled={saving}>
             {saving ? "Saving…" : "Submit rating"}
           </Button>

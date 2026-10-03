@@ -9,8 +9,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, Loader2, ImagePlus, Trash2 } from "lucide-react";
 import { ListingImage } from "@/components/ListingImage";
 import { toast } from "sonner";
@@ -106,24 +119,39 @@ function MarketPage() {
                 <div className="p-4 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="font-semibold">{l.title}</h3>
-                    <Badge variant={l.status === "active" ? "default" : "secondary"}>{l.status}</Badge>
+                    <Badge variant={l.status === "active" ? "default" : "secondary"}>
+                      {l.status}
+                    </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    R{Number(l.price_per_unit).toFixed(2)}/{l.unit} · {l.quantity_available} {l.unit} available
+                    R{Number(l.price_per_unit).toFixed(2)}/{l.unit} · {l.quantity_available}{" "}
+                    {l.unit} available
                   </p>
                   {l.location && <p className="text-xs text-muted-foreground">📍 {l.location}</p>}
                   <div className="flex flex-wrap gap-2 pt-2">
                     {l.status === "active" ? (
                       <>
-                        <Button size="sm" variant="outline" onClick={() => updateStatus(l.id, "sold")}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => updateStatus(l.id, "sold")}
+                        >
                           Mark sold
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => updateStatus(l.id, "closed")}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => updateStatus(l.id, "closed")}
+                        >
                           Close
                         </Button>
                       </>
                     ) : (
-                      <Button size="sm" variant="outline" onClick={() => updateStatus(l.id, "active")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => updateStatus(l.id, "active")}
+                      >
                         Re-list
                       </Button>
                     )}
@@ -217,17 +245,29 @@ function NewListingDialog({
       <div className="space-y-3">
         <div>
           <Label>Title</Label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Fresh tomatoes — 50kg" maxLength={120} />
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Fresh tomatoes — 50kg"
+            maxLength={120}
+          />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div>
             <Label>Crop</Label>
-            <Input value={crop} onChange={(e) => setCrop(e.target.value)} placeholder="Tomatoes" maxLength={60} />
+            <Input
+              value={crop}
+              onChange={(e) => setCrop(e.target.value)}
+              placeholder="Tomatoes"
+              maxLength={60}
+            />
           </div>
           <div>
             <Label>Unit</Label>
             <Select value={unit} onValueChange={setUnit}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="kg">kg</SelectItem>
                 <SelectItem value="bag">bag</SelectItem>
@@ -242,20 +282,42 @@ function NewListingDialog({
         <div className="grid grid-cols-2 gap-2">
           <div>
             <Label>Price per {unit} (R)</Label>
-            <Input type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
           </div>
           <div>
             <Label>Quantity available</Label>
-            <Input type="number" min="0" step="0.01" value={qty} onChange={(e) => setQty(e.target.value)} />
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              value={qty}
+              onChange={(e) => setQty(e.target.value)}
+            />
           </div>
         </div>
         <div>
           <Label>Location</Label>
-          <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Pretoria, GP" maxLength={120} />
+          <Input
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Pretoria, GP"
+            maxLength={120}
+          />
         </div>
         <div>
           <Label>Description</Label>
-          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} rows={3} />
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            maxLength={500}
+            rows={3}
+          />
         </div>
         <div>
           <Label className="cursor-pointer">
@@ -268,7 +330,9 @@ function NewListingDialog({
         </div>
       </div>
       <DialogFooter>
-        <Button variant="ghost" onClick={onClose}>Cancel</Button>
+        <Button variant="ghost" onClick={onClose}>
+          Cancel
+        </Button>
         <Button onClick={submit} disabled={saving}>
           {saving ? "Saving…" : "Publish"}
         </Button>

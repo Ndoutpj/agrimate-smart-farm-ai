@@ -9,8 +9,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, Loader2, Wrench, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -76,7 +89,9 @@ function ServicesPage() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">My Services</h1>
-            <p className="text-sm text-muted-foreground">List equipment and services you offer to farmers.</p>
+            <p className="text-sm text-muted-foreground">
+              List equipment and services you offer to farmers.
+            </p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -106,19 +121,37 @@ function ServicesPage() {
                     <h3 className="font-semibold">{s.title}</h3>
                     <p className="text-xs text-muted-foreground">{s.category}</p>
                   </div>
-                  <Badge variant={s.status === "active" ? "default" : "secondary"}>{s.status}</Badge>
+                  <Badge variant={s.status === "active" ? "default" : "secondary"}>
+                    {s.status}
+                  </Badge>
                 </div>
                 <p className="text-sm">
-                  <span className="font-bold text-primary">R{Number(s.price_per_unit).toFixed(2)}</span>
+                  <span className="font-bold text-primary">
+                    R{Number(s.price_per_unit).toFixed(2)}
+                  </span>
                   <span className="text-xs text-muted-foreground">/{s.unit}</span>
                 </p>
                 {s.location && <p className="text-xs text-muted-foreground">📍 {s.location}</p>}
-                {s.description && <p className="text-sm text-muted-foreground line-clamp-2">{s.description}</p>}
+                {s.description && (
+                  <p className="text-sm text-muted-foreground line-clamp-2">{s.description}</p>
+                )}
                 <div className="flex flex-wrap gap-2 pt-2">
                   {s.status === "active" ? (
-                    <Button size="sm" variant="outline" onClick={() => updateStatus(s.id, "paused")}>Pause</Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => updateStatus(s.id, "paused")}
+                    >
+                      Pause
+                    </Button>
                   ) : (
-                    <Button size="sm" variant="outline" onClick={() => updateStatus(s.id, "active")}>Activate</Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => updateStatus(s.id, "active")}
+                    >
+                      Activate
+                    </Button>
                   )}
                   <Button size="sm" variant="ghost" onClick={() => remove(s.id)}>
                     <Trash2 className="h-4 w-4" />
@@ -133,7 +166,15 @@ function ServicesPage() {
   );
 }
 
-function NewServiceDialog({ onClose, onCreated, userId }: { onClose: () => void; onCreated: () => void; userId: string }) {
+function NewServiceDialog({
+  onClose,
+  onCreated,
+  userId,
+}: {
+  onClose: () => void;
+  onCreated: () => void;
+  userId: string;
+}) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [description, setDescription] = useState("");
@@ -165,26 +206,41 @@ function NewServiceDialog({ onClose, onCreated, userId }: { onClose: () => void;
 
   return (
     <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-      <DialogHeader><DialogTitle>New service</DialogTitle></DialogHeader>
+      <DialogHeader>
+        <DialogTitle>New service</DialogTitle>
+      </DialogHeader>
       <div className="space-y-3">
         <div>
           <Label>Title</Label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="John Deere 5075E tractor" maxLength={120} />
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="John Deere 5075E tractor"
+            maxLength={120}
+          />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div>
             <Label>Category</Label>
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
-                {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                {CATEGORIES.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <div>
             <Label>Unit</Label>
             <Select value={unit} onValueChange={setUnit}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="hour">hour</SelectItem>
                 <SelectItem value="day">day</SelectItem>
@@ -197,24 +253,49 @@ function NewServiceDialog({ onClose, onCreated, userId }: { onClose: () => void;
         </div>
         <div>
           <Label>Price per {unit} (R)</Label>
-          <Input type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
+          <Input
+            type="number"
+            min="0"
+            step="0.01"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
         </div>
         <div>
           <Label>Base location</Label>
-          <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Pretoria, GP" maxLength={120} />
+          <Input
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Pretoria, GP"
+            maxLength={120}
+          />
         </div>
         <div>
           <Label>Service area</Label>
-          <Input value={area} onChange={(e) => setArea(e.target.value)} placeholder="Within 50km of Pretoria" maxLength={120} />
+          <Input
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
+            placeholder="Within 50km of Pretoria"
+            maxLength={120}
+          />
         </div>
         <div>
           <Label>Description</Label>
-          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} maxLength={500} />
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+            maxLength={500}
+          />
         </div>
       </div>
       <DialogFooter>
-        <Button variant="ghost" onClick={onClose}>Cancel</Button>
-        <Button onClick={submit} disabled={saving}>{saving ? "Saving…" : "Publish"}</Button>
+        <Button variant="ghost" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button onClick={submit} disabled={saving}>
+          {saving ? "Saving…" : "Publish"}
+        </Button>
       </DialogFooter>
     </DialogContent>
   );

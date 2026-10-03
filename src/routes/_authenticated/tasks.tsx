@@ -8,7 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
-  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
 import { Plus, Trash2, Loader2, CalendarClock, Flag, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -66,15 +70,15 @@ function TasksPage() {
     setLoading(false);
   }, [user]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const addTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !title.trim()) return;
     setSaving(true);
-    const due_at = dueTime
-      ? new Date(`${today()}T${dueTime}:00`).toISOString()
-      : null;
+    const due_at = dueTime ? new Date(`${today()}T${dueTime}:00`).toISOString() : null;
     const { error } = await supabase.from("tasks").insert({
       user_id: user.id,
       title: title.trim(),
@@ -84,14 +88,20 @@ function TasksPage() {
     });
     setSaving(false);
     if (error) return toast.error(error.message);
-    setTitle(""); setDescription(""); setDueTime(""); setPriority("medium");
+    setTitle("");
+    setDescription("");
+    setDueTime("");
+    setPriority("medium");
     load();
   };
 
   const toggle = async (t: Task) => {
     const completed = !t.completed;
-    setTasks((prev) => prev.map((x) => x.id === t.id ? { ...x, completed } : x));
-    await supabase.from("tasks").update({ completed, completed_at: completed ? new Date().toISOString() : null }).eq("id", t.id);
+    setTasks((prev) => prev.map((x) => (x.id === t.id ? { ...x, completed } : x)));
+    await supabase
+      .from("tasks")
+      .update({ completed, completed_at: completed ? new Date().toISOString() : null })
+      .eq("id", t.id);
   };
 
   const remove = async (id: string) => {
@@ -108,7 +118,14 @@ function TasksPage() {
       <div className="mx-auto max-w-3xl space-y-6 px-4 py-8 animate-fade-up">
         <div>
           <h1 className="text-3xl font-bold">Daily Tasks</h1>
-          <p className="text-muted-foreground">{new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</p>
+          <p className="text-muted-foreground">
+            {new Date().toLocaleDateString(undefined, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
 
         <Card className="tilt-card p-5">
@@ -116,12 +133,23 @@ function TasksPage() {
             <div className="grid gap-3 md:grid-cols-[1fr_160px_140px]">
               <div>
                 <Label htmlFor="t-title">Task</Label>
-                <Input id="t-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Irrigate maize field" required />
+                <Input
+                  id="t-title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Irrigate maize field"
+                  required
+                />
               </div>
               <div>
                 <Label>Priority</Label>
-                <Select value={priority} onValueChange={(v) => setPriority(v as "low" | "medium" | "high")}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                <Select
+                  value={priority}
+                  onValueChange={(v) => setPriority(v as "low" | "medium" | "high")}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="low">Low</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
@@ -131,29 +159,49 @@ function TasksPage() {
               </div>
               <div>
                 <Label htmlFor="t-due">Due time</Label>
-                <Input id="t-due" type="time" value={dueTime} onChange={(e) => setDueTime(e.target.value)} />
+                <Input
+                  id="t-due"
+                  type="time"
+                  value={dueTime}
+                  onChange={(e) => setDueTime(e.target.value)}
+                />
               </div>
             </div>
-            <Textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Notes (optional)" />
+            <Textarea
+              rows={2}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Notes (optional)"
+            />
             <Button type="submit" disabled={saving || !title.trim()}>
-              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+              {saving ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="mr-2 h-4 w-4" />
+              )}
               Add task
             </Button>
           </form>
         </Card>
 
         {loading ? (
-          <div className="text-muted-foreground"><Loader2 className="inline mr-2 h-4 w-4 animate-spin" /> Loading tasks…</div>
+          <div className="text-muted-foreground">
+            <Loader2 className="inline mr-2 h-4 w-4 animate-spin" /> Loading tasks…
+          </div>
         ) : (
           <>
             <Section title={`Open · ${open.length}`}>
               {open.length === 0 ? (
                 <p className="text-sm text-muted-foreground">All clear for today 🌱</p>
-              ) : open.map((t) => <TaskRow key={t.id} t={t} onToggle={toggle} onDelete={remove} />)}
+              ) : (
+                open.map((t) => <TaskRow key={t.id} t={t} onToggle={toggle} onDelete={remove} />)
+              )}
             </Section>
             {done.length > 0 && (
               <Section title={`Completed · ${done.length}`}>
-                {done.map((t) => <TaskRow key={t.id} t={t} onToggle={toggle} onDelete={remove} />)}
+                {done.map((t) => (
+                  <TaskRow key={t.id} t={t} onToggle={toggle} onDelete={remove} />
+                ))}
               </Section>
             )}
           </>
@@ -166,20 +214,39 @@ function TasksPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-2">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{title}</h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        {title}
+      </h2>
       <div className="space-y-2">{children}</div>
     </div>
   );
 }
 
-function TaskRow({ t, onToggle, onDelete }: { t: Task; onToggle: (t: Task) => void; onDelete: (id: string) => void }) {
-  const priorityColor = t.priority === "high" ? "text-destructive" : t.priority === "medium" ? "text-primary" : "text-muted-foreground";
+function TaskRow({
+  t,
+  onToggle,
+  onDelete,
+}: {
+  t: Task;
+  onToggle: (t: Task) => void;
+  onDelete: (id: string) => void;
+}) {
+  const priorityColor =
+    t.priority === "high"
+      ? "text-destructive"
+      : t.priority === "medium"
+        ? "text-primary"
+        : "text-muted-foreground";
   return (
     <Card className="flex items-start gap-3 p-4 tilt-card">
       <Checkbox checked={t.completed} onCheckedChange={() => onToggle(t)} className="mt-1" />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <span className={`font-medium ${t.completed ? "line-through text-muted-foreground" : ""}`}>{t.title}</span>
+          <span
+            className={`font-medium ${t.completed ? "line-through text-muted-foreground" : ""}`}
+          >
+            {t.title}
+          </span>
           <span className={`inline-flex items-center gap-1 text-xs ${priorityColor}`}>
             <Flag className="h-3 w-3" /> {t.priority}
           </span>
@@ -190,7 +257,8 @@ function TaskRow({ t, onToggle, onDelete }: { t: Task; onToggle: (t: Task) => vo
           )}
           {t.due_at && (
             <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-              <CalendarClock className="h-3 w-3" /> {new Date(t.due_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              <CalendarClock className="h-3 w-3" />{" "}
+              {new Date(t.due_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </span>
           )}
         </div>

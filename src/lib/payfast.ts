@@ -66,6 +66,9 @@ export function parseFormBodyOrdered(body: string): Array<[string, string]> {
       const i = kv.indexOf("=");
       const k = i === -1 ? kv : kv.slice(0, i);
       const v = i === -1 ? "" : kv.slice(i + 1);
-      return [decodeURIComponent(k.replace(/\+/g, " ")), decodeURIComponent(v.replace(/\+/g, " "))] as [string, string];
+      return [
+        decodeURIComponent(k.replace(/\+/g, " ")),
+        decodeURIComponent(v.replace(/\+/g, " ")),
+      ] as [string, string];
     });
 }

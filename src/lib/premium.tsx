@@ -45,6 +45,12 @@ export function LockBadge({ className = "" }: { className?: string }) {
   return <span className={className} />;
 }
 
-export function PremiumGate({ children }: { children: ReactNode; feature?: string; className?: string }) {
+export function PremiumGate({
+  children,
+}: {
+  children: ReactNode;
+  feature?: string;
+  className?: string;
+}) {
   return <>{children}</>;
 }

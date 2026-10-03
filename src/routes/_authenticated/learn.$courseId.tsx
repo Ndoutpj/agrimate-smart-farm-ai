@@ -45,7 +45,12 @@ function CourseDetail() {
       const [{ data: c }, { data: p }] = await Promise.all([
         supabase.from("courses").select("*").eq("id", courseId).maybeSingle(),
         user
-          ? supabase.from("course_progress").select("id,completed,completed_at,certificate_code,user_full_name").eq("user_id", user.id).eq("course_id", courseId).maybeSingle()
+          ? supabase
+              .from("course_progress")
+              .select("id,completed,completed_at,certificate_code,user_full_name")
+              .eq("user_id", user.id)
+              .eq("course_id", courseId)
+              .maybeSingle()
           : Promise.resolve({ data: null }),
       ]);
       setCourse(c as Course | null);
@@ -58,20 +63,28 @@ function CourseDetail() {
     if (!user || !course) return;
     setBusy(true);
     const code = generateCertCode();
-    const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
-    const fullName = (profile?.full_name as string | null) ?? user.email?.split("@")[0] ?? "AgriMate Farmer";
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .maybeSingle();
+    const fullName =
+      (profile?.full_name as string | null) ?? user.email?.split("@")[0] ?? "AgriMate Farmer";
 
     const { data, error } = await supabase
       .from("course_progress")
-      .upsert({
-        user_id: user.id,
-        course_id: course.id,
-        progress: 100,
-        completed: true,
-        completed_at: new Date().toISOString(),
-        certificate_code: code,
-        user_full_name: fullName,
-      }, { onConflict: "user_id,course_id" })
+      .upsert(
+        {
+          user_id: user.id,
+          course_id: course.id,
+          progress: 100,
+          completed: true,
+          completed_at: new Date().toISOString(),
+          certificate_code: code,
+          user_full_name: fullName,
+        },
+        { onConflict: "user_id,course_id" },
+      )
       .select("id,completed,completed_at,certificate_code,user_full_name")
       .single();
 
@@ -104,8 +117,9 @@ function CourseDetail() {
         code: progress.certificate_code,
         verifyUrl: `${window.location.origin}/verify/${progress.certificate_code}`,
       });
-    } catch (e: any) {
-      toast.error(e?.message ?? "Could not generate PDF");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Could not generate PDF";
+      toast.error(message);
     } finally {
       setBusy(false);
     }
@@ -115,7 +129,9 @@ function CourseDetail() {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader />
-        <div className="flex items-center px-4 py-16 text-muted-foreground"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading…</div>
+        <div className="flex items-center px-4 py-16 text-muted-foreground">
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading…
+        </div>
       </div>
     );
   }
@@ -125,7 +141,11 @@ function CourseDetail() {
         <SiteHeader />
         <div className="mx-auto max-w-2xl px-4 py-16 text-center">
           <p>Course not found.</p>
-          <Link to="/learn"><Button variant="outline" className="mt-4">Back to courses</Button></Link>
+          <Link to="/learn">
+            <Button variant="outline" className="mt-4">
+              Back to courses
+            </Button>
+          </Link>
         </div>
       </div>
     );
@@ -135,7 +155,10 @@ function CourseDetail() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <div className="mx-auto max-w-3xl space-y-6 px-4 py-8 animate-fade-up">
-        <Link to="/learn" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          to="/learn"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="mr-1 h-4 w-4" /> All courses
         </Link>
 
@@ -162,13 +185,21 @@ function CourseDetail() {
             <h2 className="text-xl font-semibold">You earned a certificate</h2>
             <p className="mt-1 text-sm text-muted-foreground">ID: {progress.certificate_code}</p>
             <Button onClick={download} disabled={busy} size="lg" className="mt-4">
-              {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+              {busy ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="mr-2 h-4 w-4" />
+              )}
               Download certificate (PDF)
             </Button>
           </Card>
         ) : (
           <Button onClick={complete} disabled={busy} size="lg" className="w-full">
-            {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
+            {busy ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <CheckCircle2 className="mr-2 h-4 w-4" />
+            )}
             Mark as completed & earn certificate
           </Button>
         )}

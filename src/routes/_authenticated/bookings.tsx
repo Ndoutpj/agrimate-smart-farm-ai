@@ -35,7 +35,8 @@ function BookingsPage() {
   const [items, setItems] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const isProvider = profile?.account_type === "service_provider" || profile?.is_service_provider_enabled;
+  const isProvider =
+    profile?.account_type === "service_provider" || profile?.is_service_provider_enabled;
 
   const load = async () => {
     if (!user) return;
@@ -66,11 +67,15 @@ function BookingsPage() {
       <main className="mx-auto max-w-3xl px-4 py-6">
         <h1 className="text-2xl font-bold">Bookings</h1>
         <p className="mb-6 text-sm text-muted-foreground">
-          {isProvider ? "Incoming requests for your services and equipment." : "Your equipment & service bookings."}
+          {isProvider
+            ? "Incoming requests for your services and equipment."
+            : "Your equipment & service bookings."}
         </p>
 
         {loading ? (
-          <div className="flex justify-center py-12 text-muted-foreground"><Loader2 className="h-6 w-6 animate-spin" /></div>
+          <div className="flex justify-center py-12 text-muted-foreground">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
         ) : items.length === 0 ? (
           <Card className="p-12 text-center">
             <Calendar className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
@@ -84,28 +89,66 @@ function BookingsPage() {
                 <Card key={b.id} className="p-4 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="text-sm font-semibold">{b.start_date}{b.end_date ? ` → ${b.end_date}` : ""}</p>
+                      <p className="text-sm font-semibold">
+                        {b.start_date}
+                        {b.end_date ? ` → ${b.end_date}` : ""}
+                      </p>
                       {b.hours && <p className="text-xs text-muted-foreground">{b.hours} hours</p>}
                     </div>
-                    <Badge variant={b.status === "accepted" ? "default" : b.status === "completed" ? "secondary" : "outline"}>
+                    <Badge
+                      variant={
+                        b.status === "accepted"
+                          ? "default"
+                          : b.status === "completed"
+                            ? "secondary"
+                            : "outline"
+                      }
+                    >
                       {b.status}
                     </Badge>
                   </div>
-                  <p className="text-sm">Total: <span className="font-bold text-primary">R{Number(b.total_price).toFixed(2)}</span></p>
-                  {b.contact_phone && <p className="text-xs text-muted-foreground">📞 {b.contact_phone}</p>}
+                  <p className="text-sm">
+                    Total:{" "}
+                    <span className="font-bold text-primary">
+                      R{Number(b.total_price).toFixed(2)}
+                    </span>
+                  </p>
+                  {b.contact_phone && (
+                    <p className="text-xs text-muted-foreground">📞 {b.contact_phone}</p>
+                  )}
                   {b.notes && <p className="text-sm text-muted-foreground">{b.notes}</p>}
                   <div className="flex flex-wrap gap-2 pt-1">
                     {mineAsProvider && b.status === "pending" && (
                       <>
-                        <Button size="sm" onClick={() => updateStatus(b.id, "accepted")}>Accept</Button>
-                        <Button size="sm" variant="outline" onClick={() => updateStatus(b.id, "declined")}>Decline</Button>
+                        <Button size="sm" onClick={() => updateStatus(b.id, "accepted")}>
+                          Accept
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => updateStatus(b.id, "declined")}
+                        >
+                          Decline
+                        </Button>
                       </>
                     )}
                     {b.status === "accepted" && (
-                      <Button size="sm" variant="outline" onClick={() => updateStatus(b.id, "completed")}>Mark completed</Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => updateStatus(b.id, "completed")}
+                      >
+                        Mark completed
+                      </Button>
                     )}
                     {!mineAsProvider && b.status === "pending" && (
-                      <Button size="sm" variant="ghost" onClick={() => updateStatus(b.id, "cancelled")}>Cancel</Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => updateStatus(b.id, "cancelled")}
+                      >
+                        Cancel
+                      </Button>
                     )}
                   </div>
                 </Card>

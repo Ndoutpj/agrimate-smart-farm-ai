@@ -60,7 +60,9 @@ export function OrderChat({ orderId, userId }: { orderId: string; userId: string
     <div className="flex flex-col rounded-lg border bg-muted/30">
       <div className="max-h-64 min-h-32 overflow-y-auto p-3 space-y-2">
         {messages.length === 0 && (
-          <p className="text-center text-xs text-muted-foreground py-4">No messages yet. Say hi 👋</p>
+          <p className="text-center text-xs text-muted-foreground py-4">
+            No messages yet. Say hi 👋
+          </p>
         )}
         {messages.map((m) => {
           const mine = m.sender_id === userId;

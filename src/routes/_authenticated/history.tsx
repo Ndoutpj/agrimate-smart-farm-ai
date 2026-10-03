@@ -15,7 +15,9 @@ function HistoryPage() {
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-6">
         <h1 className="text-2xl font-bold">Order history</h1>
-        <p className="mb-6 text-sm text-muted-foreground">Completed, declined and cancelled orders.</p>
+        <p className="mb-6 text-sm text-muted-foreground">
+          Completed, declined and cancelled orders.
+        </p>
         <OrdersList userId={user.id} mode="history" />
       </main>
     </div>

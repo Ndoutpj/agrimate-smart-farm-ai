@@ -37,7 +37,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     const { data } = await supabase
       .from("profiles")
-      .select("id, full_name, account_type, is_service_provider_enabled, verification_status, is_premium")
+      .select(
+        "id, full_name, account_type, is_service_provider_enabled, verification_status, is_premium",
+      )
       .eq("id", user.id)
       .maybeSingle();
     setProfile((data as ProfileRow | null) ?? null);

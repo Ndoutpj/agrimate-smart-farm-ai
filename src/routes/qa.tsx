@@ -15,7 +15,11 @@ export const Route = createFileRoute("/qa")({
   head: () => ({
     meta: [
       { title: "Ask AgriMate — Farmer Q&A" },
-      { name: "description", content: "Ask our AI assistant any farming question — soil, pests, irrigation, markets, livestock." },
+      {
+        name: "description",
+        content:
+          "Ask our AI assistant any farming question — soil, pests, irrigation, markets, livestock.",
+      },
       { property: "og:title", content: "Ask AgriMate — Farmer Q&A" },
       { property: "og:description", content: "Your 24/7 AI farming expert." },
     ],
@@ -58,8 +62,9 @@ function QAPage() {
     try {
       const res = await ask({ data: { messages: next } });
       setMessages([...next, { role: "assistant", content: res.text }]);
-    } catch (e: any) {
-      toast.error(e?.message ?? "Failed to get answer");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Failed to get answer";
+      toast.error(message);
       setMessages(messages);
     } finally {
       setLoading(false);
@@ -79,7 +84,9 @@ function QAPage() {
           <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
             Farmer <span className="text-primary">Q&amp;A</span>
           </h1>
-          <p className="mt-3 text-muted-foreground">Ask anything about farming and get expert answers instantly.</p>
+          <p className="mt-3 text-muted-foreground">
+            Ask anything about farming and get expert answers instantly.
+          </p>
         </div>
       </div>
 
@@ -106,12 +113,13 @@ function QAPage() {
               </div>
             )}
             {messages.map((m, i) => (
-              <div key={i} className={`flex animate-fade-up ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={i}
+                className={`flex animate-fade-up ${m.role === "user" ? "justify-end" : "justify-start"}`}
+              >
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
-                    m.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "border bg-card"
+                    m.role === "user" ? "bg-primary text-primary-foreground" : "border bg-card"
                   }`}
                 >
                   {m.role === "assistant" ? (
@@ -134,7 +142,10 @@ function QAPage() {
             <div ref={endRef} />
           </div>
           <form
-            onSubmit={(e) => { e.preventDefault(); send(input); }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              send(input);
+            }}
             className="flex items-center gap-2 border-t bg-background/60 p-3 backdrop-blur"
           >
             <Input

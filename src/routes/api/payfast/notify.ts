@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import {
-  PAYFAST_VALIDATE_URL,
-  parseFormBodyOrdered,
-  verifyItnSignature,
-} from "@/lib/payfast";
+import { PAYFAST_VALIDATE_URL, parseFormBodyOrdered, verifyItnSignature } from "@/lib/payfast";
 
 /**
  * PayFast ITN (Instant Transaction Notification) webhook.

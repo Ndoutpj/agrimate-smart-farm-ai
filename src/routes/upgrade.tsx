@@ -14,7 +14,11 @@ export const Route = createFileRoute("/upgrade")({
   head: () => ({
     meta: [
       { title: "Upgrade to AgriMate Premium — R49/month" },
-      { name: "description", content: "Unlock 14-day weather, unlimited AI Crop Doctor, analytics, community posting and more." },
+      {
+        name: "description",
+        content:
+          "Unlock 14-day weather, unlimited AI Crop Doctor, analytics, community posting and more.",
+      },
     ],
   }),
   component: UpgradePage,
@@ -54,8 +58,9 @@ function UpgradePage() {
       }
       document.body.appendChild(f);
       f.submit();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Couldn't start checkout");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Couldn't start checkout";
+      toast.error(message);
       setSubmitting(false);
     }
   };
@@ -69,6 +74,21 @@ function UpgradePage() {
     "Priority support",
   ];
 
+  const packs = [
+    {
+      title: "Plan",
+      text: "Know what to plant, when to irrigate, and how much each crop will cost before you commit.",
+    },
+    {
+      title: "Prevent",
+      text: "Catch disease, stress, and weather risk early using AI diagnosis and forecast alerts.",
+    },
+    {
+      title: "Profit",
+      text: "Turn smarter decisions into better yields, stronger margins, and less waste on the farm.",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -80,36 +100,66 @@ function UpgradePage() {
             <Sparkles className="h-3.5 w-3.5 text-primary" /> AgriMate Premium
           </div>
           <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-            Grow more with <span className="text-primary">Premium</span>
+            Everything you need in one <span className="text-primary">farming pack</span>
           </h1>
-          <p className="mt-3 text-muted-foreground">Everything unlocked. Cancel anytime.</p>
+          <p className="mt-3 text-muted-foreground">
+            Unlock better planning, faster alerts, and smarter decisions across your farm.
+          </p>
         </div>
       </div>
 
-      <div className="mx-auto max-w-2xl px-4 py-10">
+      <div className="mx-auto max-w-5xl px-4 py-10">
+        <div className="mb-8 grid gap-4 md:grid-cols-3">
+          {packs.map((pack) => (
+            <div key={pack.title} className="rounded-2xl border border-border/70 bg-card p-5">
+              <div className="mb-3 inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                {pack.title}
+              </div>
+              <p className="text-sm leading-6 text-muted-foreground">{pack.text}</p>
+            </div>
+          ))}
+        </div>
+
         <Card className="tilt-card overflow-hidden p-6 md:p-8">
-          <div className="flex items-baseline gap-2">
-            <div className="text-5xl font-bold">R49</div>
-            <div className="text-muted-foreground">/ month</div>
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="text-5xl font-bold">R49</div>
+              <div className="text-muted-foreground">/ month</div>
+            </div>
+            <div className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
+              Simple monthly plan · no hidden costs
+            </div>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">Recurring monthly · billed by PayFast</p>
-          <ul className="mt-6 space-y-2.5 text-sm">
+
+          <p className="mt-3 text-sm text-muted-foreground">
+            Recurring monthly · billed by PayFast · cancel anytime
+          </p>
+
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
             {features.map((f) => (
-              <li key={f} className="flex items-start gap-2">
+              <div
+                key={f}
+                className="flex items-start gap-2 rounded-xl border border-border/60 bg-muted/30 p-3 text-sm"
+              >
                 <Check className="mt-0.5 h-4 w-4 text-primary" />
                 <span>{f}</span>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
+
           <Button
             size="lg"
             onClick={checkout}
             disabled={submitting}
             className="mt-6 w-full bg-gradient-to-r from-primary to-primary-glow text-base"
           >
-            {submitting
-              ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Redirecting to PayFast…</>
-              : <>Upgrade Now — R49/month</>}
+            {submitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Redirecting to PayFast…
+              </>
+            ) : (
+              <>Upgrade Now — R49/month</>
+            )}
           </Button>
           <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
             <ShieldCheck className="h-3.5 w-3.5" /> Secure checkout via PayFast

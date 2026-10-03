@@ -37,7 +37,7 @@
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 1rem;
 
   --background: oklch(0.99 0.01 120);
   --foreground: oklch(0.22 0.04 150);
@@ -76,12 +76,12 @@
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --gradient-hero: linear-gradient(135deg, oklch(0.46 0.13 145) 0%, oklch(0.66 0.16 142) 100%);
-  --gradient-soft: linear-gradient(180deg, oklch(0.98 0.02 130) 0%, oklch(0.94 0.05 125) 100%);
+  --gradient-soft: linear-gradient(180deg, oklch(0.985 0.012 130) 0%, oklch(0.955 0.035 125) 100%);
   --gradient-earth: linear-gradient(135deg, oklch(0.68 0.11 55) 0%, oklch(0.55 0.13 60) 100%);
 
-  --shadow-sm: 0 1px 2px 0 oklch(0.3 0.05 150 / 0.06);
-  --shadow-md: 0 8px 24px -8px oklch(0.3 0.1 150 / 0.18);
-  --shadow-lg: 0 20px 50px -12px oklch(0.3 0.1 150 / 0.25);
+  --shadow-sm: 0 1px 3px 0 oklch(0.3 0.05 150 / 0.07), 0 1px 2px -1px oklch(0.3 0.05 150 / 0.06);
+  --shadow-md: 0 10px 28px -12px oklch(0.3 0.1 150 / 0.2);
+  --shadow-lg: 0 24px 56px -18px oklch(0.3 0.1 150 / 0.28);
   --shadow-glow: 0 10px 40px -10px oklch(0.55 0.18 142 / 0.45);
 }
 
@@ -120,24 +120,43 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-display);
     -webkit-font-smoothing: antialiased;
   }
-  html { scroll-behavior: smooth; }
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 @layer utilities {
-  .perspective-1000 { perspective: 1000px; }
-  .preserve-3d { transform-style: preserve-3d; }
-  .backface-hidden { backface-visibility: hidden; }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
 
   .tilt-card {
     transform: perspective(900px) rotateX(0deg) rotateY(0deg);
-    transition: transform 400ms cubic-bezier(.2,.8,.2,1), box-shadow 400ms;
+    transition:
+      transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 400ms;
     will-change: transform;
   }
   .tilt-card:hover {
@@ -145,25 +164,66 @@
     box-shadow: var(--shadow-lg);
   }
 
-  @keyframes float-y {
-    0%,100% { transform: translateY(0) }
-    50% { transform: translateY(-14px) }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
-  .animate-float { animation: float-y 6s ease-in-out infinite; }
+
+  @keyframes float-y {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+  .animate-float {
+    animation: float-y 6s ease-in-out infinite;
+  }
 
   @keyframes blob-drift {
-    0%,100% { transform: translate(0,0) scale(1) }
-    33% { transform: translate(30px,-20px) scale(1.05) }
-    66% { transform: translate(-20px,20px) scale(.95) }
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -20px) scale(1.05);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.95);
+    }
   }
-  .animate-blob { animation: blob-drift 18s ease-in-out infinite; }
+  .animate-blob {
+    animation: blob-drift 18s ease-in-out infinite;
+  }
 
   @keyframes fade-up {
-    from { opacity: 0; transform: translateY(16px) }
-    to   { opacity: 1; transform: translateY(0) }
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  .animate-fade-up { animation: fade-up .7s cubic-bezier(.2,.8,.2,1) both; }
+  .animate-fade-up {
+    animation: fade-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
 
-  @keyframes spin-slow { to { transform: rotate(360deg) } }
-  .animate-spin-slow { animation: spin-slow 30s linear infinite; }
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 30s linear infinite;
+  }
 }

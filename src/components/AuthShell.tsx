@@ -7,7 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Sparkles, Check, Loader2, Fingerprint, Sprout, ShoppingBasket, Wrench } from "lucide-react";
+import {
+  Sparkles,
+  Check,
+  Loader2,
+  Fingerprint,
+  Sprout,
+  ShoppingBasket,
+  Wrench,
+} from "lucide-react";
 import sideImage from "@/assets/auth-side.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -79,9 +87,15 @@ export function AuthShell({
         if (remember && "credentials" in navigator && "PasswordCredential" in window) {
           try {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const cred = new (window as any).PasswordCredential({ id: email, password, name: email });
+            const cred = new (window as any).PasswordCredential({
+              id: email,
+              password,
+              name: email,
+            });
             await navigator.credentials.store(cred);
-          } catch {/* ignore */}
+          } catch {
+            /* ignore */
+          }
         }
         navigate({ to: "/dashboard" });
       }
@@ -125,7 +139,11 @@ export function AuthShell({
         return;
       }
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({ id: cred.id, email: cred.id, password: cred.password } as never);
+      const { error } = await supabase.auth.signInWithPassword({
+        id: cred.id,
+        email: cred.id,
+        password: cred.password,
+      } as never);
       if (error) throw error;
       navigate({ to: "/dashboard" });
     } catch (err) {
@@ -159,17 +177,25 @@ export function AuthShell({
               <>
                 <div className="space-y-1.5">
                   <Label htmlFor="name">Full name</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Tshifhiwa Junior" autoComplete="name" />
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Tshifhiwa Junior"
+                    autoComplete="name"
+                  />
                   {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>I am a…</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    {([
-                      { v: "farmer", icon: Sprout, label: "Farmer", emoji: "🌱" },
-                      { v: "buyer", icon: ShoppingBasket, label: "Buyer", emoji: "🛒" },
-                      { v: "service_provider", icon: Wrench, label: "Service", emoji: "🔧" },
-                    ] as const).map((opt) => {
+                    {(
+                      [
+                        { v: "farmer", icon: Sprout, label: "Farmer", emoji: "🌱" },
+                        { v: "buyer", icon: ShoppingBasket, label: "Buyer", emoji: "🛒" },
+                        { v: "service_provider", icon: Wrench, label: "Service", emoji: "🔧" },
+                      ] as const
+                    ).map((opt) => {
                       const Icon = opt.icon;
                       const active = accountType === opt.v;
                       return (
@@ -194,20 +220,36 @@ export function AuthShell({
                   </div>
                   <p className="text-[11px] text-muted-foreground">
                     {accountType === "farmer" && "Plan, sell produce, post jobs, browse equipment."}
-                    {accountType === "buyer" && "Browse and buy produce direct from verified farmers."}
-                    {accountType === "service_provider" && "List equipment & services, accept bookings, track earnings."}
+                    {accountType === "buyer" &&
+                      "Browse and buy produce direct from verified farmers."}
+                    {accountType === "service_provider" &&
+                      "List equipment & services, accept bookings, track earnings."}
                   </p>
                 </div>
               </>
             )}
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@farm.co" autoComplete="username" />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@farm.co"
+                autoComplete="username"
+              />
               {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete={mode === "register" ? "new-password" : "current-password"} />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                autoComplete={mode === "register" ? "new-password" : "current-password"}
+              />
               {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
             </div>
 
@@ -217,29 +259,51 @@ export function AuthShell({
                   <Checkbox checked={remember} onCheckedChange={(v) => setRemember(!!v)} />
                   Remember me
                 </label>
-                <a href="#" className="text-primary hover:underline">Forgot password?</a>
+                <a href="#" className="text-primary hover:underline">
+                  Forgot password?
+                </a>
               </div>
             )}
 
-            <Button type="submit" size="lg" disabled={loading} className="w-full bg-primary hover:bg-primary/90 shadow-[var(--shadow-glow)]">
+            <Button
+              type="submit"
+              size="lg"
+              disabled={loading}
+              className="w-full bg-primary hover:bg-primary/90 shadow-[var(--shadow-glow)]"
+            >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               {mode === "register" ? "Create account" : "Sign in"}
             </Button>
 
             <div className="relative my-2">
-              <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">or</span>
               </div>
             </div>
 
-            <Button type="button" variant="outline" size="lg" className="w-full" onClick={onGoogle} disabled={googleLoading}>
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              className="w-full"
+              onClick={onGoogle}
+              disabled={googleLoading}
+            >
               {googleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Continue with Google
             </Button>
 
             {mode === "login" && (
-              <Button type="button" variant="ghost" size="lg" className="w-full" onClick={onPasskeyQuickSignIn}>
+              <Button
+                type="button"
+                variant="ghost"
+                size="lg"
+                className="w-full"
+                onClick={onPasskeyQuickSignIn}
+              >
                 <Fingerprint className="mr-2 h-4 w-4" />
                 Use biometric / saved login
               </Button>
@@ -248,17 +312,39 @@ export function AuthShell({
 
           <div className="mt-6 text-sm text-muted-foreground">
             {mode === "login" ? (
-              <>Don't have an account? <Link to="/register" className="text-primary hover:underline">Create one</Link></>
+              <>
+                Don't have an account?{" "}
+                <Link to="/register" className="text-primary hover:underline">
+                  Create one
+                </Link>
+              </>
             ) : (
-              <>Already have an account? <Link to="/login" className="text-primary hover:underline">Sign in</Link></>
+              <>
+                Already have an account?{" "}
+                <Link to="/login" className="text-primary hover:underline">
+                  Sign in
+                </Link>
+              </>
             )}
           </div>
         </div>
       </div>
 
       <div className="relative hidden lg:block overflow-hidden">
-        <img src={sideImage} alt="Seedling at sunrise" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
-        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(135deg, color-mix(in oklab, var(--primary) 55%, transparent), transparent 60%)" }} />
+        <img
+          src={sideImage}
+          alt="Seedling at sunrise"
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="lazy"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(135deg, color-mix(in oklab, var(--primary) 55%, transparent), transparent 60%)",
+          }}
+        />
         <div className="relative z-10 flex h-full flex-col justify-end p-12 text-primary-foreground">
           <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" /> AgriMate Premium

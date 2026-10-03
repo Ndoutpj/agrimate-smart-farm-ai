@@ -2,7 +2,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 
-export function ComingSoon({ title, description, phase }: { title: string; description: string; phase?: string }) {
+export function ComingSoon({
+  title,
+  description,
+  phase,
+}: {
+  title: string;
+  description: string;
+  phase?: string;
+}) {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />

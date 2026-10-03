@@ -28,7 +28,11 @@ export const createPayfastSubscription = createServerFn({ method: "POST" })
       .maybeSingle();
 
     const email = context.claims?.email as string | undefined;
-    const [firstName, ...rest] = (profile?.full_name || email?.split("@")[0] || "AgriMate Farmer").split(" ");
+    const [firstName, ...rest] = (
+      profile?.full_name ||
+      email?.split("@")[0] ||
+      "AgriMate Farmer"
+    ).split(" ");
 
     const origin = data.returnOrigin.replace(/\/$/, "");
     const mPaymentId = `am_${userId}_${Date.now()}`;

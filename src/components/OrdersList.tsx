@@ -24,21 +24,16 @@ type Order = {
   listings?: { title: string; unit: string } | null;
 };
 
-const STATUS_COLORS: Record<Order["status"], "default" | "secondary" | "destructive" | "outline"> = {
-  pending: "outline",
-  accepted: "default",
-  declined: "destructive",
-  completed: "secondary",
-  cancelled: "destructive",
-};
+const STATUS_COLORS: Record<Order["status"], "default" | "secondary" | "destructive" | "outline"> =
+  {
+    pending: "outline",
+    accepted: "default",
+    declined: "destructive",
+    completed: "secondary",
+    cancelled: "destructive",
+  };
 
-export function OrdersList({
-  userId,
-  mode,
-}: {
-  userId: string;
-  mode: "active" | "history";
-}) {
+export function OrdersList({ userId, mode }: { userId: string; mode: "active" | "history" }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Order | null>(null);
@@ -47,7 +42,8 @@ export function OrdersList({
 
   const load = async () => {
     setLoading(true);
-    const statuses = mode === "active" ? ["pending", "accepted"] : ["completed", "declined", "cancelled"];
+    const statuses =
+      mode === "active" ? ["pending", "accepted"] : ["completed", "declined", "cancelled"];
     const { data } = await supabase
       .from("orders")
       .select("*, listings(title, unit)")
@@ -61,7 +57,10 @@ export function OrdersList({
         .from("ratings")
         .select("order_id")
         .eq("rater_id", userId)
-        .in("order_id", data.map((o) => o.id));
+        .in(
+          "order_id",
+          data.map((o) => o.id),
+        );
       setRatedIds(new Set((rated ?? []).map((r) => r.order_id)));
     }
     setLoading(false);
@@ -94,7 +93,10 @@ export function OrdersList({
         {mode === "active" ? (
           <>
             No active orders.{" "}
-            <Link to="/browse" className="text-primary underline">Browse the marketplace</Link>.
+            <Link to="/browse" className="text-primary underline">
+              Browse the marketplace
+            </Link>
+            .
           </>
         ) : (
           "No past orders yet."
@@ -109,12 +111,17 @@ export function OrdersList({
         {orders.map((o) => {
           const youAreBuyer = o.buyer_id === userId;
           return (
-            <Card key={o.id} className="p-4 cursor-pointer hover:shadow" onClick={() => setSelected(o)}>
+            <Card
+              key={o.id}
+              className="p-4 cursor-pointer hover:shadow"
+              onClick={() => setSelected(o)}
+            >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="font-semibold truncate">{o.listings?.title ?? "Listing"}</p>
                   <p className="text-xs text-muted-foreground">
-                    {youAreBuyer ? "Buying" : "Selling"} · {Number(o.quantity)} {o.listings?.unit ?? "unit"} · R{Number(o.total_price).toFixed(2)}
+                    {youAreBuyer ? "Buying" : "Selling"} · {Number(o.quantity)}{" "}
+                    {o.listings?.unit ?? "unit"} · R{Number(o.total_price).toFixed(2)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {new Date(o.created_at).toLocaleDateString()}
@@ -148,11 +155,14 @@ export function OrdersList({
             </DialogHeader>
             <div className="space-y-2 text-sm">
               <p>
-                <span className="text-muted-foreground">Quantity:</span> {Number(selected.quantity)} {selected.listings?.unit}
+                <span className="text-muted-foreground">Quantity:</span> {Number(selected.quantity)}{" "}
+                {selected.listings?.unit}
               </p>
               <p>
                 <span className="text-muted-foreground">Total:</span>{" "}
-                <span className="font-bold text-primary">R{Number(selected.total_price).toFixed(2)}</span>
+                <span className="font-bold text-primary">
+                  R{Number(selected.total_price).toFixed(2)}
+                </span>
               </p>
               {selected.contact_phone && (
                 <p>
@@ -174,18 +184,33 @@ export function OrdersList({
             <div className="flex flex-wrap gap-2">
               {selected.farmer_id === userId && selected.status === "pending" && (
                 <>
-                  <Button size="sm" onClick={() => updateStatus(selected.id, "accepted")}>Accept</Button>
-                  <Button size="sm" variant="outline" onClick={() => updateStatus(selected.id, "declined")}>Decline</Button>
+                  <Button size="sm" onClick={() => updateStatus(selected.id, "accepted")}>
+                    Accept
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => updateStatus(selected.id, "declined")}
+                  >
+                    Decline
+                  </Button>
                 </>
               )}
               {selected.farmer_id === userId && selected.status === "accepted" && (
-                <Button size="sm" onClick={() => updateStatus(selected.id, "completed")}>Mark completed</Button>
-              )}
-              {selected.buyer_id === userId && (selected.status === "pending" || selected.status === "accepted") && (
-                <Button size="sm" variant="outline" onClick={() => updateStatus(selected.id, "cancelled")}>
-                  Cancel order
+                <Button size="sm" onClick={() => updateStatus(selected.id, "completed")}>
+                  Mark completed
                 </Button>
               )}
+              {selected.buyer_id === userId &&
+                (selected.status === "pending" || selected.status === "accepted") && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => updateStatus(selected.id, "cancelled")}
+                  >
+                    Cancel order
+                  </Button>
+                )}
             </div>
 
             <div>

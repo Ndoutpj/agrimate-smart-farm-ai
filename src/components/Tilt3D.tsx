@@ -2,8 +2,14 @@ import { useEffect, useRef, type ReactNode } from "react";
 
 /** Mouse-tracking 3D tilt wrapper. Pure CSS transforms, GPU friendly. */
 export function Tilt3D({
-  children, className = "", max = 10,
-}: { children: ReactNode; className?: string; max?: number }) {
+  children,
+  className = "",
+  max = 10,
+}: {
+  children: ReactNode;
+  className?: string;
+  max?: number;
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

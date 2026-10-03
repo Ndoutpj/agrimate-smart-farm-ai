@@ -65,7 +65,9 @@ export async function generateCertificatePdf(opts: {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
   doc.setTextColor(120, 120, 120);
-  doc.text(`Awarded ${new Date(completedAt).toLocaleDateString()}`, W / 2, 375, { align: "center" });
+  doc.text(`Awarded ${new Date(completedAt).toLocaleDateString()}`, W / 2, 375, {
+    align: "center",
+  });
 
   // Gold seal (circle)
   const sealX = W / 2;

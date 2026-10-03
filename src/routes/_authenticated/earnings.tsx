@@ -35,7 +35,9 @@ function EarningsPage() {
   }, [user?.id]);
 
   const stats = useMemo(() => {
-    let pending = 0, accepted = 0, completed = 0;
+    let pending = 0,
+      accepted = 0,
+      completed = 0;
     for (const b of items) {
       const n = Number(b.total_price) || 0;
       if (b.status === "pending") pending += n;
@@ -63,14 +65,31 @@ function EarningsPage() {
         <p className="mb-6 text-sm text-muted-foreground">Track your service provider income.</p>
 
         {loading ? (
-          <div className="flex justify-center py-12 text-muted-foreground"><Loader2 className="h-6 w-6 animate-spin" /></div>
+          <div className="flex justify-center py-12 text-muted-foreground">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
         ) : (
           <>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <StatCard icon={Wallet} label="Total" value={stats.total} accent="text-primary" />
-              <StatCard icon={CheckCircle2} label="Completed" value={stats.completed} accent="text-green-600" />
-              <StatCard icon={TrendingUp} label="In progress" value={stats.accepted} accent="text-blue-600" />
-              <StatCard icon={Clock} label="Pending" value={stats.pending} accent="text-amber-600" />
+              <StatCard
+                icon={CheckCircle2}
+                label="Completed"
+                value={stats.completed}
+                accent="text-green-600"
+              />
+              <StatCard
+                icon={TrendingUp}
+                label="In progress"
+                value={stats.accepted}
+                accent="text-blue-600"
+              />
+              <StatCard
+                icon={Clock}
+                label="Pending"
+                value={stats.pending}
+                accent="text-amber-600"
+              />
             </div>
 
             <Card className="mt-6 p-5">
@@ -89,7 +108,10 @@ function EarningsPage() {
                           <span className="font-semibold">R{amount.toFixed(2)}</span>
                         </div>
                         <div className="h-2 rounded-full bg-muted overflow-hidden">
-                          <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+                          <div
+                            className="h-full bg-primary transition-all"
+                            style={{ width: `${pct}%` }}
+                          />
                         </div>
                       </div>
                     );
@@ -104,7 +126,17 @@ function EarningsPage() {
   );
 }
 
-function StatCard({ icon: Icon, label, value, accent }: { icon: typeof Wallet; label: string; value: number; accent: string }) {
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  accent,
+}: {
+  icon: typeof Wallet;
+  label: string;
+  value: number;
+  accent: string;
+}) {
   return (
     <Card className="p-4">
       <Icon className={`h-5 w-5 ${accent}`} />
