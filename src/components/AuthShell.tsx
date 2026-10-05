@@ -68,17 +68,25 @@ export function AuthShell({
     setLoading(true);
     try {
       if (mode === "register") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { full_name: name, account_type: accountType },
-          },
-        });
-        if (error) throw error;
-        toast.success("Account created! Check your email to confirm.");
-        navigate({ to: "/login" });
+        const { data, error } = await supabase.auth.signUp({
+  email,
+  password,
+  options: {
+    data: { full_name: name, account_type: accountType },
+  },
+});
+
+if (error) throw error;
+
+if (data.session) {
+  toast.success("Account created! Welcome to AgriMate.");
+  navigate({ to: "/dashboard" });
+} else {
+  toast.error(
+    "Account created, but no session was returned. Check your Supabase email confirmation settings."
+  );
+}
+
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
