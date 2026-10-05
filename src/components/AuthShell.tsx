@@ -8,6 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   Sparkles,
   Check,
   Loader2,
@@ -50,6 +58,9 @@ export function AuthShell({
   const [accountType, setAccountType] = useState<"farmer" | "buyer" | "service_provider">("farmer");
   const [remember, setRemember] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -150,6 +161,26 @@ export function AuthShell({
       toast.error(err instanceof Error ? err.message : "Quick sign-in failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onForgotPassword = async () => {
+    if (!forgotEmail.trim()) {
+      toast.error("Enter your email address");
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail.trim(), {
+        redirectTo: `${window.location.origin}/login`,
+      });
+      if (error) throw error;
+      toast.success("Password reset link sent! Check your email.");
+      setForgotOpen(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send reset email");
+    } finally {
+      setForgotLoading(false);
     }
   };
 
@@ -259,9 +290,16 @@ export function AuthShell({
                   <Checkbox checked={remember} onCheckedChange={(v) => setRemember(!!v)} />
                   Remember me
                 </label>
-                <a href="#" className="text-primary hover:underline">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForgotEmail(email);
+                    setForgotOpen(true);
+                  }}
+                  className="text-primary hover:underline"
+                >
                   Forgot password?
-                </a>
+                </button>
               </div>
             )}
 
@@ -364,6 +402,45 @@ export function AuthShell({
           </ul>
         </div>
       </div>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset your password</DialogTitle>
+            <DialogDescription>
+              Enter your email and we'll send you a link to set a new password.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <Label htmlFor="forgot-email">Email</Label>
+            <Input
+              id="forgot-email"
+              type="email"
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              placeholder="you@farm.co"
+              autoComplete="username"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") onForgotPassword();
+              }}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setForgotOpen(false)}
+              disabled={forgotLoading}
+            >
+              Cancel
+            </Button>
+            <Button type="button" onClick={onForgotPassword} disabled={forgotLoading}>
+              {forgotLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Send reset link
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
