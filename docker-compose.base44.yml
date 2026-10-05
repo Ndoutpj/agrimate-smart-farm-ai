@@ -1,0 +1,25 @@
+# Base44 development environment for AgriMate (TanStack Start + Vite, Bun, hosted Supabase).
+# Runs the Vite dev server from the cloned source so edits hot-reload.
+services:
+  web:
+    image: oven/bun:1
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "3000:8080" # Lovable config binds the dev server on 8080
+    environment:
+      # Platform-provided: Vite >= 6.1 appends this to server.allowedHosts so the
+      # preview proxy hostname is accepted. Listed bare to pass the value through.
+      __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS:
+      BASE44_PUBLIC_HOST_SUFFIX:
+    env_file:
+      - /run/base44/app.env # platform secrets (Supabase/Gemini/PayFast) — LAST, always wins
+    command: ["sh", "-ec", "bun install && exec bun run dev"]
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"fetch('http://localhost:8080/').then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
+    restart: on-failure

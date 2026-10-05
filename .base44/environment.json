@@ -1,0 +1,57 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "SUPABASE_URL",
+      "description": "Hosted Supabase project URL (https://<project>.supabase.co). From your Supabase dashboard → Project Settings → API → Project URL.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "SUPABASE_PUBLISHABLE_KEY",
+      "description": "Supabase anon/public key (publishable). From Supabase dashboard → Project Settings → API → Project API keys → anon public.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "VITE_SUPABASE_URL",
+      "description": "Same Supabase project URL, exposed to the client bundle (VITE_ prefix). From Supabase dashboard → Project Settings → API → Project URL.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "VITE_SUPABASE_PUBLISHABLE_KEY",
+      "description": "Same Supabase anon/public key, exposed to the client bundle (VITE_ prefix). From Supabase dashboard → Project Settings → API → Project API keys → anon public.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "GEMINI_API_KEY",
+      "description": "Google Gemini API key for the AI crop-doctor feature. From Google AI Studio (aistudio.google.com). Server-only — do NOT add a VITE_ prefix.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "PAYFAST_MERCHANT_ID",
+      "description": "PayFast merchant ID for premium subscription payments. From PayFast merchant dashboard. Server-only.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "PAYFAST_MERCHANT_KEY",
+      "description": "PayFast merchant key for premium subscription payments. From PayFast merchant dashboard. Server-only.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "PAYFAST_PASSPHRASE",
+      "description": "PayFast passphrase used to sign/verify payment signatures. From PayFast merchant dashboard → Settings → Passphrase. Server-only.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "SUPABASE_SERVICE_ROLE_KEY",
+      "description": "Optional privileged Supabase service-role key for server-side admin operations. From Supabase dashboard → Project Settings → API → service_role. Server-only.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "LOVABLE_API_KEY",
+      "description": "Optional alternative AI gateway key, used only if GEMINI_API_KEY is unset. From Lovable Cloud. Server-only.",
+      "requiredAtBoot": false
+    }
+  ]
+}
