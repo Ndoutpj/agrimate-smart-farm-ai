@@ -143,7 +143,7 @@ Please respond in this exact markdown structure:
 (one line)`;
 
     const json = await callAI({
-      model: "google/gemini-2.5-flash",
+      model: "google/gemini-3.5-flash",
       messages: [
         { role: "system", content: sys },
         {
@@ -179,7 +179,7 @@ export const askFarmer = createServerFn({ method: "POST" })
 - If asked something outside farming, gently redirect.
 - Format with short paragraphs and bullets when helpful.`;
     const json = await callAI({
-      model: "google/gemini-2.5-flash",
+      model: "google/gemini-3.5-flash",
       messages: [{ role: "system", content: sys }, ...data.messages],
     });
     const text = json?.choices?.[0]?.message?.content ?? "Sorry, I couldn't answer that.";
