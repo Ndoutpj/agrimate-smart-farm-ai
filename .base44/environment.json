@@ -1,0 +1,31 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "GEMINI_API_KEY",
+      "description": "AI features (Crop Doctor leaf diagnosis, farm Q&A). Get a key at https://aistudio.google.com/apikey. Server-only.",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": false
+    },
+    {
+      "name": "PAYFAST_MERCHANT_ID",
+      "description": "PayFast merchant id for the premium subscription checkout (https://developers.payfast.co.za/).",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": false
+    },
+    {
+      "name": "PAYFAST_MERCHANT_KEY",
+      "description": "PayFast merchant key for the premium subscription checkout (https://developers.payfast.co.za/).",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": false
+    },
+    {
+      "name": "PAYFAST_PASSPHRASE",
+      "description": "PayFast passphrase used to sign checkout/ITN payloads (https://developers.payfast.co.za/).",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": false
+    }
+  ]
+}

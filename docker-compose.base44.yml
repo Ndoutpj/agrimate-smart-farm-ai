@@ -1,0 +1,293 @@
+# Base44 development environment for this repository.
+#
+# Starts the TanStack Start app straight from the cloned source (Vite dev server
+# on port 3000) plus a self-hosted Supabase stack (Postgres, GoTrue auth,
+# PostgREST, Storage, Realtime) behind a small nginx API gateway on port 54321,
+# so no external credentials are needed to see the app working.
+#
+#   docker compose -f docker-compose.base44.yml up -d --build
+#   app:              http://localhost:3000
+#   supabase gateway: http://localhost:54321
+#
+# The Postgres image (supabase/postgres) ships the roles, schemas and the
+# `supabase_realtime` publication the app's migrations expect. The local
+# Supabase credentials below are development-only values generated for this
+# sandbox stack; they are not user secrets. Real third-party credentials
+# (GEMINI_API_KEY, PAYFAST_*) are delivered out-of-band to /run/base44/app.env.
+
+name: base44-agrimate
+
+# Development-only local Supabase credentials (not secrets, not reusable).
+x-supabase-env: &supabase-env
+  POSTGRES_PASSWORD: "f873a50a4e97fdad1c1fd2329a6ebedbfa66"
+  JWT_SECRET: "f4a487ba7753dd384b773a4da84d59e9ae4e71867395422c9798b4dd04b3a97f"
+  ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzE2ODEsImV4cCI6MjEwNjczMTY4MX0.R1jA8fgu6Oivep2mAtc9TtnJ73DIIQV1n49_RRnYsso"
+  SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MTM3MTY4MSwiZXhwIjoyMTA2NzMxNjgxfQ.hDb1VEe1TCH5Rsf0Y5gK_ciA4iEWOK4wRgsL3ScabU0"
+  SECRET_KEY_BASE: "15b35b53e78407c1ffb00836f16b87aac7cc8d6e96f10e6f295cec3f3848a364836d3568e7a5daaa2d3d7deb2d6b035c"
+
+services:
+  # ----------------------------------------------------------------- infra ---
+  db:
+    image: supabase/postgres:17.6.1.136
+    restart: on-failure
+    environment:
+      <<: *supabase-env
+      POSTGRES_HOST: /var/run/postgresql
+      POSTGRES_DB: postgres
+      JWT_EXP: "3600"
+    volumes:
+      # Extra first-boot scripts: sub-role passwords, jwt expiry, _realtime schema.
+      - ./supabase/local/db-init/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:ro
+      - ./supabase/local/db-init/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:ro
+      - ./supabase/local/db-init/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:ro
+      - db-data:/var/lib/postgresql/data
+      - db-config:/etc/postgresql-custom
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "supabase_admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  auth:
+    image: supabase/gotrue:v2.196.0
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *supabase-env
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: "9999"
+      API_EXTERNAL_URL: https://54321-${BASE44_PUBLIC_HOST_SUFFIX}
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:f873a50a4e97fdad1c1fd2329a6ebedbfa66@db:5432/postgres
+      GOTRUE_SITE_URL: https://3000-${BASE44_PUBLIC_HOST_SUFFIX}
+      GOTRUE_URI_ALLOW_LIST: https://3000-${BASE44_PUBLIC_HOST_SUFFIX},http://localhost:3000
+      GOTRUE_DISABLE_SIGNUP: "false"
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: "3600"
+      GOTRUE_JWT_SECRET: f4a487ba7753dd384b773a4da84d59e9ae4e71867395422c9798b4dd04b3a97f
+      GOTRUE_JWT_ISSUER: supabase
+      # Email + password only; auto-confirm so signup works without an SMTP server.
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: "true"
+      GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
+      GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: "false"
+      GOTRUE_SMTP_ADMIN_EMAIL: admin@example.com
+      GOTRUE_SMTP_HOST: localhost
+      GOTRUE_SMTP_PORT: "2500"
+      GOTRUE_SMTP_USER: ""
+      GOTRUE_SMTP_PASS: ""
+      GOTRUE_SMTP_SENDER_NAME: AgriMate
+      GOTRUE_MAILER_URLPATHS_INVITE: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_CONFIRMATION: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_RECOVERY: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /auth/v1/verify
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:9999/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  rest:
+    image: postgrest/postgrest:v14.17
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *supabase-env
+      PGRST_DB_URI: postgres://authenticator:f873a50a4e97fdad1c1fd2329a6ebedbfa66@db:5432/postgres
+      PGRST_DB_SCHEMAS: public,storage
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_MAX_ROWS: "1000"
+      PGRST_DB_EXTRA_SEARCH_PATH: public
+      PGRST_JWT_SECRET: f4a487ba7753dd384b773a4da84d59e9ae4e71867395422c9798b4dd04b3a97f
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_APP_SETTINGS_JWT_EXP: "3600"
+      PGRST_ADMIN_SERVER_HOST: 127.0.0.1
+      PGRST_ADMIN_SERVER_PORT: "3001"
+    healthcheck:
+      test: ["CMD", "postgrest", "--ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  storage:
+    image: supabase/storage-api:v1.74.0
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+    environment:
+      <<: *supabase-env
+      ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzE2ODEsImV4cCI6MjEwNjczMTY4MX0.R1jA8fgu6Oivep2mAtc9TtnJ73DIIQV1n49_RRnYsso"
+      SERVICE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MTM3MTY4MSwiZXhwIjoyMTA2NzMxNjgxfQ.hDb1VEe1TCH5Rsf0Y5gK_ciA4iEWOK4wRgsL3ScabU0"
+      AUTH_JWT_SECRET: f4a487ba7753dd384b773a4da84d59e9ae4e71867395422c9798b4dd04b3a97f
+      DATABASE_URL: postgres://supabase_storage_admin:f873a50a4e97fdad1c1fd2329a6ebedbfa66@db:5432/postgres
+      POSTGREST_URL: http://rest:3000
+      STORAGE_PUBLIC_URL: https://54321-${BASE44_PUBLIC_HOST_SUFFIX}
+      FILE_SIZE_LIMIT: "52428800"
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      GLOBAL_S3_BUCKET: stub
+      TENANT_ID: stub
+      REGION: stub
+      ENABLE_IMAGE_TRANSFORMATION: "false"
+      IS_MULTITENANT: "false"
+    volumes:
+      - storage-data:/var/lib/storage
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5000/status"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  realtime:
+    image: supabase/realtime:v2.134.10
+    # Realtime derives its tenant from the Host/subdomain, so the service keeps
+    # the dotted self-hosted name the gateway forwards as Host.
+    container_name: realtime-dev.supabase-realtime
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *supabase-env
+      PORT: "4000"
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: supabase_admin
+      DB_PASSWORD: f873a50a4e97fdad1c1fd2329a6ebedbfa66
+      DB_NAME: postgres
+      DB_AFTER_CONNECT_QUERY: "SET search_path TO _realtime"
+      DB_ENC_KEY: supabaserealtime
+      API_JWT_SECRET: f4a487ba7753dd384b773a4da84d59e9ae4e71867395422c9798b4dd04b3a97f
+      SECRET_KEY_BASE: 15b35b53e78407c1ffb00836f16b87aac7cc8d6e96f10e6f295cec3f3848a364836d3568e7a5daaa2d3d7deb2d6b035c
+      METRICS_JWT_SECRET: f4a487ba7753dd384b773a4da84d59e9ae4e71867395422c9798b4dd04b3a97f
+      ERL_AFLAGS: -proto_dist inet_tcp
+      DNS_NODES: "''"
+      RLIMIT_NOFILE: "10000"
+      APP_NAME: realtime
+      SEED_SELF_HOST: "true"
+      RUN_JANITOR: "true"
+      DISABLE_HEALTHCHECK_LOGGING: "true"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -sSfL --head -o /dev/null -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzE2ODEsImV4cCI6MjEwNjczMTY4MX0.R1jA8fgu6Oivep2mAtc9TtnJ73DIIQV1n49_RRnYsso\" http://127.0.0.1:4000/api/tenants/realtime-dev/health",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # nginx API gateway: the path layout supabase-js expects on port 54321.
+  gateway:
+    image: nginx:alpine
+    restart: on-failure
+    depends_on:
+      auth:
+        condition: service_healthy
+      rest:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+      realtime:
+        condition: service_started
+    ports:
+      - "54321:8000"
+    environment:
+      # Substituted into the nginx template on startup.
+      BASE44_PUBLIC_HOST_SUFFIX: ${BASE44_PUBLIC_HOST_SUFFIX}
+      BASE44_SANDBOX_HOST_DOMAIN: ${BASE44_SANDBOX_HOST_DOMAIN}
+    volumes:
+      - ./supabase/local/gateway.conf.template:/etc/nginx/templates/default.conf.template:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8000/healthz"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  # One-shot: applies the repository's migrations, then seeds the listings bucket.
+  migrate:
+    image: postgres:16
+    depends_on:
+      db:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGUSER: supabase_admin
+      PGPASSWORD: f873a50a4e97fdad1c1fd2329a6ebedbfa66
+      PGDATABASE: postgres
+    volumes:
+      - ./supabase/migrations:/migrations:ro
+      - ./supabase/local/apply-migrations.sh:/apply-migrations.sh:ro
+    entrypoint: ["/bin/sh", "/apply-migrations.sh"]
+
+  # ------------------------------------------------------------------- app ---
+  web:
+    image: node:22
+    working_dir: /app
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+    environment:
+      NODE_ENV: development
+      # Local Supabase stack: browser-facing URL (public port 54321).
+      SUPABASE_URL: https://54321-${BASE44_PUBLIC_HOST_SUFFIX}
+      VITE_SUPABASE_URL: https://54321-${BASE44_PUBLIC_HOST_SUFFIX}
+      SUPABASE_PUBLISHABLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzE2ODEsImV4cCI6MjEwNjczMTY4MX0.R1jA8fgu6Oivep2mAtc9TtnJ73DIIQV1n49_RRnYsso"
+      VITE_SUPABASE_PUBLISHABLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzE2ODEsImV4cCI6MjEwNjczMTY4MX0.R1jA8fgu6Oivep2mAtc9TtnJ73DIIQV1n49_RRnYsso"
+      SUPABASE_SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MTM3MTY4MSwiZXhwIjoyMTA2NzMxNjgxfQ.hDb1VEe1TCH5Rsf0Y5gK_ciA4iEWOK4wRgsL3ScabU0"
+      SUPABASE_PROJECT_ID: local
+      VITE_SUPABASE_PROJECT_ID: local
+      # Vite appends this (wildcard) to its allowed dev-server hosts.
+      __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS: .${BASE44_SANDBOX_HOST_DOMAIN:-localhost}
+      CHOKIDAR_USEPOLLING: "true"
+    env_file:
+      # Platform-managed external credentials (optional third-party services).
+      - path: /run/base44/app.env
+        required: false
+    command:
+      [
+        "sh",
+        "-ec",
+        "npm ci --legacy-peer-deps --no-audit --no-fund && exec node_modules/.bin/vite dev --host 0.0.0.0 --port 3000 --strictPort",
+      ]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 90s
+
+volumes:
+  db-data:
+  db-config:
+  storage-data:

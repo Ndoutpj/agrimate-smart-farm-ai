@@ -1,0 +1,80 @@
+# Local Supabase API gateway (host port 54321).
+#
+# Mirrors the path layout the Supabase clients expect, so supabase-js can talk
+# to the self-hosted stack on a single port:
+#   /auth/v1/*     -> GoTrue
+#   /rest/v1/*     -> PostgREST
+#   /storage/v1/*  -> Storage API
+#   /realtime/v1/* -> Realtime (websocket)
+#
+# BASE44_PUBLIC_HOST_SUFFIX is substituted by the nginx entrypoint envsubst step
+# (only variables that exist in the environment are replaced).
+
+map $http_origin $cors_origin {
+    default "";
+    "~*^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$" $http_origin;
+    "~*^https://3000-${BASE44_PUBLIC_HOST_SUFFIX}$" $http_origin;
+}
+
+server {
+    listen 8000;
+    server_name _;
+    client_max_body_size 50m;
+
+    # The app (port 3000) and this API (port 54321) are different sites, so CORS
+    # is answered here. Upstream CORS headers are dropped to avoid duplicates.
+    proxy_hide_header Access-Control-Allow-Origin;
+    proxy_hide_header Access-Control-Allow-Credentials;
+    proxy_hide_header Access-Control-Allow-Headers;
+    proxy_hide_header Access-Control-Allow-Methods;
+    proxy_hide_header Access-Control-Expose-Headers;
+    add_header Access-Control-Allow-Origin $cors_origin always;
+    add_header Access-Control-Allow-Credentials "true" always;
+    add_header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS" always;
+    add_header Access-Control-Allow-Headers "authorization, apikey, content-type, accept, origin, x-client-info, x-supabase-api-version, x-upsert, prefer, range, x-retry-count" always;
+    add_header Access-Control-Expose-Headers "content-range, content-length, x-request-id, x-deleted-objects" always;
+    add_header Vary Origin always;
+
+    if ($request_method = OPTIONS) {
+        return 204;
+    }
+
+    location = /healthz {
+        add_header Content-Type text/plain;
+        return 200 "ok";
+    }
+
+    location /auth/v1/ {
+        proxy_pass http://auth:9999/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+    }
+
+    location /rest/v1/ {
+        proxy_pass http://rest:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+    }
+
+    location /storage/v1/ {
+        proxy_pass http://storage:5000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+    }
+
+    location /realtime/v1/ {
+        # Realtime reads its tenant from the Host subdomain.
+        proxy_pass http://realtime-dev.supabase-realtime:4000/socket/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host realtime-dev.supabase-realtime;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+}
