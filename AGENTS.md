@@ -42,7 +42,10 @@ service runs from the cloned source, so edits under `src/` hot-reload.
   because Realtime derives its tenant from the host name.
 - **Healthchecks probe `127.0.0.1`, never `localhost`** — busybox `wget` in these
   images does not fall back from `::1`. `postgrest --ready` only works because
-  `PGRST_ADMIN_SERVER_HOST/PORT` are set.
+  `PGRST_ADMIN_SERVER_HOST/PORT` are set. The db probe must also pass
+  `-d postgres`: plain `pg_isready -U supabase_admin` looks for a database named
+  after the user and logs `FATAL: database "supabase_admin" does not exist` on
+  every interval.
 - **Local Supabase config lives in compose.** `SUPABASE_URL`, `VITE_SUPABASE_URL`,
   `SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SERVICE_ROLE_KEY` point at the local
   stack (with a development-only JWT secret), so no Supabase account is needed.

@@ -43,7 +43,9 @@ services:
       - db-data:/var/lib/postgresql/data
       - db-config:/etc/postgresql-custom
     healthcheck:
-      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "supabase_admin"]
+      # -d postgres: pg_isready otherwise probes a db named after the user
+      # ("supabase_admin"), which does not exist and logs a FATAL on every probe.
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "supabase_admin", "-d", "postgres"]
       interval: 5s
       timeout: 5s
       retries: 12
